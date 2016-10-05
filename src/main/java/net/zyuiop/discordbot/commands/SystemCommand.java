@@ -24,6 +24,6 @@ public class SystemCommand extends DiscordCommand {
 		while ((line = br.readLine()) != null) { sb.append(line).append("\n"); }
 
 		System.out.println(sb);
-		message.getChannel().sendMessage("Server is running `" + sb + "`");
+		message.getChannel().sendMessage("The bot is running on a `" + sb + "` server");
 	}
 }
