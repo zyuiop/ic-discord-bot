@@ -3,6 +3,7 @@ package net.zyuiop.discordbot;
 import net.zyuiop.discordbot.commands.DiscordCommand;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.MessageUpdateEvent;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
@@ -15,20 +16,14 @@ public class DiscordEventHandler {
 	@EventSubscriber
 	public void onMessage(MessageReceivedEvent event) throws RateLimitException, DiscordException, MissingPermissionsException {
 		IMessage message = event.getMessage();
-		if (message.getContent().startsWith("!")) {
-			String[] data = message.getContent().split(" ");
-			if (data[0].length() == 1) {
-				return;
-			}
-			DiscordCommand command = CommandRegistry.getCommand(data[0].substring(1));
-			if (command != null) {
-				try {
-					command.run(message);
-				} catch (Exception e) {
-					message.getChannel().sendMessage("Erreur pendant l'exécution de la commande : " + e.getClass().getName());
-					e.printStackTrace();
-				}
-			}
-		}
+		CommandRegistry.handle(message);
+	}
+	@EventSubscriber
+	public void onMessage(MessageUpdateEvent event) throws RateLimitException, DiscordException, MissingPermissionsException {
+		if (event.getNewMessage().getContent().equalsIgnoreCase(event.getOldMessage().getContent()))
+			return;
+
+		IMessage message = event.getNewMessage();
+		CommandRegistry.handle(message);
 	}
 }
