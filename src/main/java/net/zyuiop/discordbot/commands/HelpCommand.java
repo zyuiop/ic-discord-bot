@@ -17,7 +17,7 @@ public class HelpCommand extends DiscordCommand {
 		IChannel channel = message.getChannel();
 		StringBuilder msg = new StringBuilder("Commandes ICBot : \n```");
 		for (DiscordCommand command : CommandRegistry.getAll()) {
-			msg.append(command.getName());
+			msg.append("!").append(command.getName());
 			if (command.getDescription() != null) {
 				msg.append(" : ").append(command.getDescription());
 			}
