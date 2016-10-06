@@ -1,8 +1,10 @@
 package net.zyuiop.discordbot.commands;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import net.zyuiop.discordbot.DiscordBot;
 import sx.blah.discord.handle.obj.IMessage;
 
 /**
@@ -23,7 +25,10 @@ public class SystemCommand extends DiscordCommand {
 		String line;
 		while ((line = br.readLine()) != null) { sb.append(line).append("\n"); }
 
-		System.out.println(sb);
 		message.getChannel().sendMessage("The bot is running on a `" + sb + "` server");
+
+		File[] files = DiscordBot.getArchiveDir().listFiles((dir, name) -> name.endsWith("jpg") || name.endsWith("png"));
+		if (files == null) { return; }
+		message.getChannel().sendMessage("The memes archive contains **" + files.length + " memes**");
 	}
 }

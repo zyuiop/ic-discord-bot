@@ -29,10 +29,7 @@ public class DiscordEventHandler {
 	private final File archiveDir;
 
 	public DiscordEventHandler() {
-		archiveDir = new File("memesarchive");
-
-		if (!archiveDir.exists())
-			archiveDir.mkdir();
+		archiveDir = DiscordBot.getArchiveDir();
 	}
 
 	@EventSubscriber

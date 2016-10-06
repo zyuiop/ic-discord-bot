@@ -18,6 +18,7 @@ import sx.blah.discord.util.DiscordException;
  * @author zyuiop
  */
 public class DiscordBot {
+	private static File archiveDir;
 	private static IDiscordClient client;
 
 	public static void main(String... args) throws DiscordException {
@@ -52,6 +53,12 @@ public class DiscordBot {
 			token = args[0];
 		}
 
+		System.out.println("Initiating memes archive...");
+		archiveDir = new File(properties.getProperty("archivepath"));
+
+		if (!archiveDir.exists())
+			archiveDir.mkdir();
+
 		System.out.println("Initializing commands...");
 		new HelpCommand();
 		new RandomMemeCommand();
@@ -68,6 +75,7 @@ public class DiscordBot {
 			}
 		}
 
+		System.out.println("Connecting to Discord !");
 		client = new ClientBuilder().withToken(token).login();
 		client.getDispatcher().registerListener(new DiscordEventHandler());
 	}
@@ -76,7 +84,12 @@ public class DiscordBot {
 		Properties def = new Properties();
 		def.setProperty("token", null);
 		def.setProperty("groups", "info:syscom,syscom:info");
+		def.setProperty("archivepath", "memesarchive");
 
 		return def;
+	}
+
+	public static File getArchiveDir() {
+		return archiveDir;
 	}
 }
