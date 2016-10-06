@@ -44,7 +44,7 @@ public class DiscordBot {
 		}
 
 		String token = properties.getProperty("token");
-		if (token == null) {
+		if (token == null || token.isEmpty()) {
 			if (args.length == 0) {
 				System.out.println("No token provided.");
 				return;
@@ -82,7 +82,7 @@ public class DiscordBot {
 
 	private static Properties buildDefault() {
 		Properties def = new Properties();
-		def.setProperty("token", null);
+		def.setProperty("token", "");
 		def.setProperty("groups", "info:syscom,syscom:info");
 		def.setProperty("archivepath", "memesarchive");
 
