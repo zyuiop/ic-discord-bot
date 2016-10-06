@@ -1,5 +1,10 @@
 package net.zyuiop.discordbot;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Properties;
 import net.zyuiop.discordbot.commands.ChangeGroupCommand;
 import net.zyuiop.discordbot.commands.CountCommand;
 import net.zyuiop.discordbot.commands.HelpCommand;
@@ -16,21 +21,62 @@ public class DiscordBot {
 	private static IDiscordClient client;
 
 	public static void main(String... args) throws DiscordException {
-		if (args.length == 0) {
-			System.out.println("usage : DiscordBot <token>");
-			return;
+		Properties properties = new Properties(buildDefault());
+		File props = new File("icbot.properties");
+
+		if (props.exists() && props.isFile()) {
+			try {
+				FileReader reader = new FileReader(props);
+				properties.load(reader);
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.out.println("Cannot read properties file, aborting startup.");
+				return;
+			}
+		} else {
+			try {
+				FileWriter writer = new FileWriter(props);
+				properties.store(writer, "Created by ICBot");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
-		String token = args[0];
+		String token = properties.getProperty("token");
+		if (token == null) {
+			if (args.length == 0) {
+				System.out.println("No token provided.");
+				return;
+			}
 
-		new ChangeGroupCommand("info", "syscom");
-		new ChangeGroupCommand("syscom", "info");
+			token = args[0];
+		}
+
+		System.out.println("Initializing commands...");
 		new HelpCommand();
 		new RandomMemeCommand();
 		new SystemCommand();
 		new CountCommand();
 
+		String groups = properties.getProperty("groups");
+		if (groups != null) {
+			for (String groupString : groups.split(",")) {
+				String[] parts = groupString.split(":");
+				if (parts.length == 2) {
+					new ChangeGroupCommand(parts[0], parts[1]);
+				}
+			}
+		}
+
 		client = new ClientBuilder().withToken(token).login();
 		client.getDispatcher().registerListener(new DiscordEventHandler());
+	}
+
+	private static Properties buildDefault() {
+		Properties def = new Properties();
+		def.setProperty("token", null);
+		def.setProperty("groups", "info:syscom,syscom:info");
+
+		return def;
 	}
 }
