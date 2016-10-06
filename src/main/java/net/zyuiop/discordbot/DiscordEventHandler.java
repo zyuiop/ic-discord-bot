@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
@@ -53,7 +54,9 @@ public class DiscordEventHandler {
 			URL website;
 			try {
 				website = new URL(message.getContent());
-				InputStream in = website.openStream();
+				URLConnection connection = website.openConnection();
+				connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
+				InputStream in = connection.getInputStream();
 				Files.copy(in, new File(archiveDir, website.getFile()).toPath(), StandardCopyOption.REPLACE_EXISTING);
 				in.close();
 			} catch (IOException e) {
