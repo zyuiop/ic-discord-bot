@@ -22,6 +22,15 @@ import sx.blah.discord.util.RateLimitException;
  * @author zyuiop
  */
 public class DiscordEventHandler {
+	private final File archiveDir;
+
+	public DiscordEventHandler() {
+		archiveDir = new File("memesarchive");
+
+		if (!archiveDir.exists())
+			archiveDir.mkdir();
+	}
+
 	@EventSubscriber
 	public void onMessage(MessageReceivedEvent event) throws RateLimitException, DiscordException, MissingPermissionsException {
 		IMessage message = event.getMessage();
@@ -42,7 +51,7 @@ public class DiscordEventHandler {
 			try {
 				website = new URL(message.getContent());
 				ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-				FileOutputStream fos = new FileOutputStream(new File("memesarchive", website.getFile()));
+				FileOutputStream fos = new FileOutputStream(new File(archiveDir, website.getFile()));
 				fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 			} catch (IOException e) {
 				e.printStackTrace();
