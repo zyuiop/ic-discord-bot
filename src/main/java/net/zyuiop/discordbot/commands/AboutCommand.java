@@ -12,8 +12,9 @@ public class AboutCommand extends DiscordCommand {
 
 	@Override
 	public void run(IMessage message) throws Exception {
-		message.getChannel().sendMessage("ICBot, non versionné parce que la flemme, par zyuiop");
-		message.getChannel().sendMessage("Github : https://github.com/zyuiop/ic-discord-bot");
-		message.getChannel().sendMessage("Basé sur Discord4J : https://github.com/austinv11/Discord4J");
+		StringBuilder builder = new StringBuilder("ICBot, non versionné parce que la flemme, par zyuiop").append("\n");
+		builder.append("Github : https://github.com/zyuiop/ic-discord-bot").append("\n");
+		builder.append("Basé sur Discord4J : https://github.com/austinv11/Discord4J");
+		message.getChannel().sendMessage(builder.toString());
 	}
 }
