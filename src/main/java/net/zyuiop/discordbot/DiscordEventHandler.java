@@ -4,10 +4,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import net.zyuiop.discordbot.commands.DiscordCommand;
 import org.apache.commons.io.IOUtils;
 import sx.blah.discord.api.events.EventSubscriber;
@@ -50,9 +53,9 @@ public class DiscordEventHandler {
 			URL website;
 			try {
 				website = new URL(message.getContent());
-				ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-				FileOutputStream fos = new FileOutputStream(new File(archiveDir, website.getFile()));
-				fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+				InputStream in = website.openStream();
+				Files.copy(in, new File(archiveDir, website.getFile()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+				in.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
