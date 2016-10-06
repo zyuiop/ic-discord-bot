@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Properties;
+import net.zyuiop.discordbot.commands.AboutCommand;
 import net.zyuiop.discordbot.commands.ChangeGroupCommand;
 import net.zyuiop.discordbot.commands.CountCommand;
 import net.zyuiop.discordbot.commands.HelpCommand;
@@ -63,6 +64,7 @@ public class DiscordBot {
 		new HelpCommand();
 		new RandomMemeCommand();
 		new SystemCommand();
+		new AboutCommand();
 		new CountCommand();
 
 		String groups = properties.getProperty("groups");
