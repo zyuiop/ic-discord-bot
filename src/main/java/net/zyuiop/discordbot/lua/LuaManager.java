@@ -2,6 +2,7 @@ package net.zyuiop.discordbot.lua;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
+import net.zyuiop.discordbot.DiscordBot;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LoadState;
 import org.luaj.vm2.LuaThread;
@@ -16,27 +17,20 @@ import org.luaj.vm2.lib.TableLib;
 import org.luaj.vm2.lib.ZeroArgFunction;
 import org.luaj.vm2.lib.jse.JseMathLib;
 import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.util.DiscordException;
-import sx.blah.discord.util.MissingPermissionsException;
-import sx.blah.discord.util.RateLimitException;
 
 /**
  * @author zyuiop
  */
 public class LuaManager {
-	private StringBuilder stringBuilder = new StringBuilder("```");
 	private final IChannel channel;
-	private Queue<String> waitingMessages = new ArrayDeque<>();
-	private Thread progThread;
-	private Thread watchThread;
+	private StringBuilder stringBuilder = new StringBuilder("```");
 
 	public LuaManager(IChannel channel) {this.channel = channel;}
 
 	protected void flush() {
-		if (stringBuilder.length() == 3)
-			return;
+		if (stringBuilder.length() == 3) { return; }
 
-		waitingMessages.add(stringBuilder.append("```").toString());
+		DiscordBot.sendMessage(channel, stringBuilder.append("```").toString());
 		stringBuilder = new StringBuilder("```");
 	}
 
@@ -82,57 +76,24 @@ public class LuaManager {
 		LuaValue hookfunc = new ZeroArgFunction() {
 
 			public LuaValue call() {
-					throw new Error("Script overran resource limits (maximum amount of 1000 instructions bypassed).");
+				throw new Error("Script overran resource limits (maximum amount of 1000 instructions bypassed).");
 			}
 		};
 
-		progThread = new Thread(() -> {
-			// sethook.invoke(LuaValue.varargsOf(new LuaValue[]{thread, hookfunc,
-			//		LuaValue.EMPTYSTRING, LuaValue.valueOf(1000)}));
+		new Thread(() -> {
+			sethook.invoke(LuaValue.varargsOf(new LuaValue[]{thread, hookfunc,
+					LuaValue.EMPTYSTRING, LuaValue.valueOf(100000)}));
 
 
 			// When we resume the thread, it will run up to 'instruction_count' instructions
 			// then call the hook function which will error out and stop the script.
 			Varargs result = thread.resume(LuaValue.NIL);
-			try {
-				flush();
-				channel.sendMessage("Résultat final : `" + result.tojstring() + "`");
-			} catch (MissingPermissionsException | RateLimitException | DiscordException e) {
-				e.printStackTrace();
-			}
-		});
+			flush();
+			DiscordBot.sendMessage(channel, "Résultat final : `" + result.tojstring() + "`");
 
-		watchThread = new Thread(() -> {
-			int seconds = 0;
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			while (progThread.isAlive()) {
-				seconds++;
-				String msg = waitingMessages.poll();
-				if (msg != null) {
-					try {
-						channel.sendMessage(msg);
-					} catch (MissingPermissionsException | DiscordException | RateLimitException e) {
-						e.printStackTrace();
-					}
-				}
+		}).run();
 
-				if (seconds >= 15) {
-					progThread.stop();
-				}
 
-				try {
-					Thread.sleep(1050);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-
-		progThread.run();
-		watchThread.run();
 	}
+
 }

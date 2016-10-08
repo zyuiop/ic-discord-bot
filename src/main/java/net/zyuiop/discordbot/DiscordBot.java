@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.Properties;
+import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
 import net.zyuiop.discordbot.commands.AboutCommand;
 import net.zyuiop.discordbot.commands.ChangeGroupCommand;
 import net.zyuiop.discordbot.commands.CountCommand;
@@ -14,7 +17,10 @@ import net.zyuiop.discordbot.commands.SystemCommand;
 import net.zyuiop.discordbot.lua.LuaCommand;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
+import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.util.DiscordException;
+import sx.blah.discord.util.MissingPermissionsException;
+import sx.blah.discord.util.RateLimitException;
 
 /**
  * @author zyuiop
@@ -22,6 +28,7 @@ import sx.blah.discord.util.DiscordException;
 public class DiscordBot {
 	private static File archiveDir;
 	private static IDiscordClient client;
+	private static BlockingQueue<SendableMessage> messages;
 
 	public static void main(String... args) throws DiscordException {
 		Properties properties = new Properties(buildDefault());
@@ -79,6 +86,26 @@ public class DiscordBot {
 			}
 		}
 
+		new Thread(() -> {
+			int sentMessages = 0;
+			long time = 0;
+
+			while (true) {
+				try {
+					SendableMessage message = messages.take();
+					sentMessages ++;
+					if (time + 5000 < System.currentTimeMillis()) {
+						time = System.currentTimeMillis();
+						sentMessages = 1;
+					} else if (sentMessages >= 5) {
+						Thread.sleep((time + 5500) - System.currentTimeMillis());
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}).run();
+
 		System.out.println("Connecting to Discord !");
 		client = new ClientBuilder().withToken(token).login();
 		client.getDispatcher().registerListener(new DiscordEventHandler());
@@ -95,5 +122,27 @@ public class DiscordBot {
 
 	public static File getArchiveDir() {
 		return archiveDir;
+	}
+
+	public static void sendMessage(IChannel channel, String message) {
+		messages.add(new SendableMessage(channel, message));
+	}
+
+	private static class SendableMessage {
+		private final IChannel channel;
+		private final String message;
+
+		private SendableMessage(IChannel channel, String message) {
+			this.channel = channel;
+			this.message = message;
+		}
+
+		public void send() {
+			try {
+				channel.sendMessage(message);
+			} catch (MissingPermissionsException | RateLimitException | DiscordException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
