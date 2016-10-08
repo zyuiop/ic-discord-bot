@@ -95,6 +95,7 @@ public class DiscordBot {
 			while (true) {
 				try {
 					SendableMessage message = messages.take();
+					message.send();
 					sentMessages ++;
 					if (time + 5000 < System.currentTimeMillis()) {
 						time = System.currentTimeMillis();
