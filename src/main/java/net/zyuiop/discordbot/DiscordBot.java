@@ -18,6 +18,7 @@ import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.handle.obj.Status;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
@@ -93,9 +94,12 @@ public class DiscordBot {
 					long time = message.send();
 
 					while (time > 0) {
+						client.changePresence(false);
 						Thread.sleep(time + 100);
 						time = message.send();
 					}
+
+					client.changePresence(true);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
