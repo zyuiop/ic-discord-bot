@@ -11,6 +11,7 @@ import net.zyuiop.discordbot.commands.CountCommand;
 import net.zyuiop.discordbot.commands.HelpCommand;
 import net.zyuiop.discordbot.commands.RandomMemeCommand;
 import net.zyuiop.discordbot.commands.SystemCommand;
+import net.zyuiop.discordbot.lua.LuaCommand;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.util.DiscordException;
@@ -66,6 +67,7 @@ public class DiscordBot {
 		new SystemCommand();
 		new AboutCommand();
 		new CountCommand();
+		new LuaCommand();
 
 		String groups = properties.getProperty("groups");
 		if (groups != null) {
