@@ -1,5 +1,7 @@
 package net.zyuiop.discordbot.lua;
 
+import java.util.ArrayDeque;
+import java.util.Queue;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LoadState;
 import org.luaj.vm2.LuaThread;
@@ -24,8 +26,9 @@ import sx.blah.discord.util.RateLimitException;
 public class LuaManager {
 	private StringBuilder stringBuilder = new StringBuilder("```");
 	private final IChannel channel;
-	private String expectedInput = null;
-	private boolean expectingInput = false;
+	private Queue<String> waitingMessages = new ArrayDeque<>();
+	private Thread progThread;
+	private Thread watchThread;
 
 	public LuaManager(IChannel channel) {this.channel = channel;}
 
@@ -33,11 +36,7 @@ public class LuaManager {
 		if (stringBuilder.length() == 3)
 			return;
 
-		try {
-			channel.sendMessage(stringBuilder.append("```").toString());
-		} catch (MissingPermissionsException | RateLimitException | DiscordException e) {
-			e.printStackTrace();
-		}
+		waitingMessages.add(stringBuilder.append("```").toString());
 		stringBuilder = new StringBuilder("```");
 	}
 
@@ -87,17 +86,48 @@ public class LuaManager {
 			}
 		};
 
-		sethook.invoke(LuaValue.varargsOf(new LuaValue[]{thread, hookfunc,
-				LuaValue.EMPTYSTRING, LuaValue.valueOf(1000) }));
+		progThread = new Thread(() -> {
+			// sethook.invoke(LuaValue.varargsOf(new LuaValue[]{thread, hookfunc,
+			//		LuaValue.EMPTYSTRING, LuaValue.valueOf(1000)}));
 
-		// When we resume the thread, it will run up to 'instruction_count' instructions
-		// then call the hook function which will error out and stop the script.
-		Varargs result = thread.resume(LuaValue.NIL);
-		try {
-			flush();
-			channel.sendMessage("Résultat final : `" + result.tojstring() + "`");
-		} catch (MissingPermissionsException | RateLimitException | DiscordException e) {
-			e.printStackTrace();
-		}
+
+			// When we resume the thread, it will run up to 'instruction_count' instructions
+			// then call the hook function which will error out and stop the script.
+			Varargs result = thread.resume(LuaValue.NIL);
+			try {
+				flush();
+				channel.sendMessage("Résultat final : `" + result.tojstring() + "`");
+			} catch (MissingPermissionsException | RateLimitException | DiscordException e) {
+				e.printStackTrace();
+			}
+		});
+
+		watchThread = new Thread(() -> {
+			int seconds = 0;
+			while (progThread.isAlive()) {
+				seconds++;
+				String msg = waitingMessages.poll();
+				if (msg != null) {
+					try {
+						channel.sendMessage(msg);
+					} catch (MissingPermissionsException | DiscordException | RateLimitException e) {
+						e.printStackTrace();
+					}
+				}
+
+				if (seconds >= 15s) {
+					progThread.stop();
+				}
+
+				try {
+					Thread.sleep(1050);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
+		progThread.run();
+		watchThread.run();
 	}
 }

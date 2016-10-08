@@ -20,17 +20,16 @@ public class LuaCommand extends DiscordCommand {
 		String msg = message.getContent().substring(4).trim().replace("```", "");
 
 		message.getChannel().setTypingStatus(true);
-		new Thread(() -> {
+
+		try {
+			new LuaManager(message.getChannel()).runScript(msg);
+		} catch (LuaError e) {
 			try {
-				new LuaManager(message.getChannel()).runScript(msg);
-			} catch (LuaError e) {
-				try {
-					message.getChannel().sendMessage("Erreur lua : ```" + e.getMessage() + "```");
-				} catch (MissingPermissionsException | RateLimitException | DiscordException e1) {
-					e1.printStackTrace();
-				}
+				message.getChannel().sendMessage("Erreur lua : ```" + e.getMessage() + "```");
+			} catch (MissingPermissionsException | RateLimitException | DiscordException e1) {
+				e1.printStackTrace();
 			}
-			message.getChannel().setTypingStatus(false);
-		}).run();
+		}
+		message.getChannel().setTypingStatus(false);
 	}
 }
