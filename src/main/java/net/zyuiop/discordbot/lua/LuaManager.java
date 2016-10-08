@@ -82,8 +82,8 @@ public class LuaManager {
 		};
 
 		Thread main = new Thread(() -> {
-			//sethook.invoke(LuaValue.varargsOf(new LuaValue[]{thread, hookfunc,
-			//		LuaValue.EMPTYSTRING, LuaValue.valueOf(100000)}));
+			sethook.invoke(LuaValue.varargsOf(new LuaValue[]{thread, hookfunc,
+					LuaValue.EMPTYSTRING, LuaValue.valueOf(10000)}));
 
 
 			// When we resume the thread, it will run up to 'instruction_count' instructions
@@ -94,18 +94,6 @@ public class LuaManager {
 
 		});
 		main.start();
-
-		new Thread(() -> {
-			try {
-				Thread.sleep(15000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			if (main.isAlive()) {
-				main.stop();
-				DiscordBot.sendMessage(channel, "Processus arrêté. (limite de temps d'exécution dépassée)");
-			}
-		}).start();
 	}
 
 }
