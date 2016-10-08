@@ -24,7 +24,8 @@ public class LuaStandard extends JseBaseLib {
 	@Override
 	public LuaValue call(LuaValue luaValue, LuaValue luaValue1) {
 		LuaValue ret = super.call(luaValue, luaValue1);
-		luaValue1.set("print", new print(this));
+		luaValue1.set("print", new print());
+		luaValue1.set("write", new write());
 
 		try {
 			Field glob = BaseLib.class.getDeclaredField("globals");
@@ -38,12 +39,6 @@ public class LuaStandard extends JseBaseLib {
 	}
 
 	final class print extends VarArgFunction {
-		final BaseLib baselib;
-
-		print(BaseLib var2) {
-			this.baselib = var2;
-		}
-
 		public Varargs invoke(Varargs var1) {
 			LuaValue var2 = LuaStandard.this.globals.get("tostring");
 			int var3 = 1;
@@ -55,11 +50,31 @@ public class LuaStandard extends JseBaseLib {
 				}
 
 				LuaString var5 = var2.call(var1.arg(var3)).strvalue();
-
 				builder.append(var5.tojstring());
 			}
 
 			builder.append("\n");
+			channel.accept(builder.toString());
+
+			return NONE;
+		}
+	}
+
+	final class write extends VarArgFunction {
+		public Varargs invoke(Varargs var1) {
+			LuaValue var2 = LuaStandard.this.globals.get("tostring");
+			int var3 = 1;
+
+			StringBuilder builder = new StringBuilder();
+			for (int var4 = var1.narg(); var3 <= var4; ++var3) {
+				if (var3 > 1) {
+					builder.append('\t');
+				}
+
+				LuaString var5 = var2.call(var1.arg(var3)).strvalue();
+				builder.append(var5.tojstring());
+			}
+
 			channel.accept(builder.toString());
 
 			return NONE;

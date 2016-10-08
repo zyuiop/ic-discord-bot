@@ -23,17 +23,26 @@ import sx.blah.discord.util.RateLimitException;
  */
 public class LuaManager {
 	private StringBuilder stringBuilder = new StringBuilder("```");
+	private final IChannel channel;
+	private String expectedInput = null;
+	private boolean expectingInput = false;
 
-	public void runScript(String script, IChannel reportChannel) {
+	public LuaManager(IChannel channel) {this.channel = channel;}
+
+	protected void flush() {
+		try {
+			channel.sendMessage(stringBuilder.append("```").toString());
+		} catch (MissingPermissionsException | RateLimitException | DiscordException e) {
+			e.printStackTrace();
+		}
+		stringBuilder = new StringBuilder("```");
+	}
+
+	public void runScript(String script) {
 		Globals user_globals = new Globals();
 		user_globals.load(new LuaStandard(str -> {
 			if (stringBuilder.length() + str.length() >= 1950) {
-				try {
-					reportChannel.sendMessage(stringBuilder.append("```").toString());
-				} catch (MissingPermissionsException | RateLimitException | DiscordException e) {
-					e.printStackTrace();
-				}
-				stringBuilder = new StringBuilder("```");
+				flush();
 			}
 			stringBuilder.append(str);
 		}));
@@ -85,8 +94,8 @@ public class LuaManager {
 		// then call the hook function which will error out and stop the script.
 		Varargs result = thread.resume(LuaValue.NIL);
 		try {
-			reportChannel.sendMessage(stringBuilder.append("```").toString());
-			reportChannel.sendMessage("Résultat final : `" + result.tojstring() + "`");
+			flush();
+			channel.sendMessage("Résultat final : `" + result.tojstring() + "`");
 		} catch (MissingPermissionsException | RateLimitException | DiscordException e) {
 			e.printStackTrace();
 		}
