@@ -81,17 +81,14 @@ public class LuaManager {
 		// Set the hook function to immediately throw an Error, which will not be
 		// handled by any Lua code other than the coroutine.
 		LuaValue hookfunc = new ZeroArgFunction() {
-			private int calls = 0;
 
 			public LuaValue call() {
-				if (++calls >= 1000)
 					throw new Error("Script overran resource limits (maximum amount of 1000 instructions bypassed).");
-				return LuaValue.NIL;
 			}
 		};
 
 		sethook.invoke(LuaValue.varargsOf(new LuaValue[]{thread, hookfunc,
-				LuaValue.valueOf("c")}));
+				LuaValue.EMPTYSTRING, LuaValue.valueOf(1000s) }));
 
 		// When we resume the thread, it will run up to 'instruction_count' instructions
 		// then call the hook function which will error out and stop the script.
