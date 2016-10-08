@@ -14,6 +14,7 @@ import org.luaj.vm2.lib.DebugLib;
 import org.luaj.vm2.lib.PackageLib;
 import org.luaj.vm2.lib.StringLib;
 import org.luaj.vm2.lib.TableLib;
+import org.luaj.vm2.lib.ThreeArgFunction;
 import org.luaj.vm2.lib.ZeroArgFunction;
 import org.luaj.vm2.lib.jse.JseMathLib;
 import sx.blah.discord.handle.obj.IChannel;
@@ -80,9 +81,9 @@ public class LuaManager {
 			}
 		};
 
-		new Thread(() -> {
-			sethook.invoke(LuaValue.varargsOf(new LuaValue[]{thread, hookfunc,
-					LuaValue.EMPTYSTRING, LuaValue.valueOf(100000)}));
+		Thread main = new Thread(() -> {
+			//sethook.invoke(LuaValue.varargsOf(new LuaValue[]{thread, hookfunc,
+			//		LuaValue.EMPTYSTRING, LuaValue.valueOf(100000)}));
 
 
 			// When we resume the thread, it will run up to 'instruction_count' instructions
@@ -91,9 +92,20 @@ public class LuaManager {
 			flush();
 			DiscordBot.sendMessage(channel, "Résultat final : `" + result.tojstring() + "`");
 
-		}).run();
+		});
+		main.start();
 
-
+		new Thread(() -> {
+			try {
+				Thread.sleep(15000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			if (main.isAlive()) {
+				main.stop();
+				DiscordBot.sendMessage(channel, "Processus arrêté. (limite de temps d'exécution dépassée)");
+			}
+		}).start();
 	}
 
 }
