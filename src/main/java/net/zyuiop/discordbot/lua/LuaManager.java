@@ -115,7 +115,7 @@ public class LuaManager {
 					}
 				}
 
-				if (seconds >= 15s) {
+				if (seconds >= 15) {
 					progThread.stop();
 				}
 
