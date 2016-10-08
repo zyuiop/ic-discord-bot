@@ -106,7 +106,7 @@ public class DiscordBot {
 					e.printStackTrace();
 				}
 			}
-		}).run();
+		}).start();
 
 		System.out.println("Connecting to Discord !");
 		client = new ClientBuilder().withToken(token).login();
