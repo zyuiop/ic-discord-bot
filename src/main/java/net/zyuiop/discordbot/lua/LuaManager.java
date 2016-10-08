@@ -30,6 +30,9 @@ public class LuaManager {
 	public LuaManager(IChannel channel) {this.channel = channel;}
 
 	protected void flush() {
+		if (stringBuilder.length() == 3)
+			return;
+
 		try {
 			channel.sendMessage(stringBuilder.append("```").toString());
 		} catch (MissingPermissionsException | RateLimitException | DiscordException e) {
