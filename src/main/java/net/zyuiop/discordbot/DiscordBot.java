@@ -4,10 +4,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayDeque;
 import java.util.Properties;
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import net.zyuiop.discordbot.commands.AboutCommand;
@@ -20,6 +17,7 @@ import net.zyuiop.discordbot.lua.LuaCommand;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
@@ -89,19 +87,14 @@ public class DiscordBot {
 		}
 
 		new Thread(() -> {
-			int sentMessages = 0;
-			long time = 0;
-
 			while (true) {
 				try {
 					SendableMessage message = messages.take();
-					message.send();
-					sentMessages ++;
-					if (time + 5000 < System.currentTimeMillis()) {
-						time = System.currentTimeMillis();
-						sentMessages = 1;
-					} else if (sentMessages >= 5) {
-						Thread.sleep((time + 5500) - System.currentTimeMillis());
+					long time = message.send();
+
+					while (time > 0) {
+						Thread.sleep(time + 100);
+						time = message.send();
 					}
 				} catch (InterruptedException e) {
 					e.printStackTrace();
@@ -140,12 +133,15 @@ public class DiscordBot {
 			this.message = message;
 		}
 
-		public void send() {
+		public long send() {
 			try {
 				channel.sendMessage(message);
-			} catch (MissingPermissionsException | RateLimitException | DiscordException e) {
+			} catch (MissingPermissionsException | DiscordException e) {
 				e.printStackTrace();
+			} catch (RateLimitException e) {
+				return e.getRetryDelay();
 			}
+			return 0;
 		}
 	}
 }
