@@ -38,7 +38,7 @@ public class CommandRegistry {
 				try {
 					command.run(message);
 				} catch (Exception e) {
-					message.getChannel().sendMessage("Erreur pendant l'exécution de la commande : " + e.getClass().getName());
+					DiscordBot.sendMessage(message.getChannel(), "Erreur pendant l'exécution de la commande : " + e.getClass().getName());
 					e.printStackTrace();
 				}
 			}

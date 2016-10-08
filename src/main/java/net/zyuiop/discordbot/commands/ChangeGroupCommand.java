@@ -1,5 +1,6 @@
 package net.zyuiop.discordbot.commands;
 
+import net.zyuiop.discordbot.DiscordBot;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IRole;
 import sx.blah.discord.handle.obj.IUser;
@@ -37,7 +38,7 @@ public class ChangeGroupCommand extends DiscordCommand {
 			user.getOrCreatePMChannel().sendMessage("Je vous ai ajouté dans le groupe `" + role.getName() + "` sur le Discord _" + message.getGuild().getName() + "_");
 			user.removeRole(leaveRole);
 		} catch (MissingPermissionsException e) {
-			message.getChannel().sendMessage("Désolé " + user.mention() + " mais je ne peux pas modifier votre groupe...");
+			DiscordBot.sendMessage(message.getChannel(), "Désolé " + user.mention() + " mais je ne peux pas modifier votre groupe...");
 		}
 	}
 }

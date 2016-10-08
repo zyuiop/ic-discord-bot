@@ -1,6 +1,7 @@
 package net.zyuiop.discordbot.commands;
 
 import net.zyuiop.discordbot.CommandRegistry;
+import net.zyuiop.discordbot.DiscordBot;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
 
@@ -25,6 +26,6 @@ public class HelpCommand extends DiscordCommand {
 		}
 		msg.append("```");
 
-		channel.sendMessage(msg.toString());
+		DiscordBot.sendMessage(message.getChannel(), msg.toString());
 	}
 }

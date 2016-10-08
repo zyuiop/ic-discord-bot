@@ -22,6 +22,6 @@ public class RandomMemeCommand extends DiscordCommand {
 		File[] files = archiveDir.listFiles((dir, name) -> name.endsWith("jpg") || name.endsWith("png"));
 		if (files == null) { return; }
 		File f = files[r.nextInt(files.length)];
-		message.getChannel().sendMessage("https://archive.zyuiop.net/Discord/" + f.getName());
+		DiscordBot.sendMessage(message.getChannel(), "https://archive.zyuiop.net/Discord/" + f.getName());
 	}
 }

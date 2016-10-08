@@ -25,10 +25,10 @@ public class SystemCommand extends DiscordCommand {
 		String line;
 		while ((line = br.readLine()) != null) { sb.append(line).append("\n"); }
 
-		message.getChannel().sendMessage("The bot is running on a `" + sb + "` server");
+		DiscordBot.sendMessage(message.getChannel(), "The bot is running on a `" + sb + "` server");
 
 		File[] files = DiscordBot.getArchiveDir().listFiles((dir, name) -> name.endsWith("jpg") || name.endsWith("png"));
 		if (files == null) { return; }
-		message.getChannel().sendMessage("The memes archive contains **" + files.length + " memes**");
+		DiscordBot.sendMessage(message.getChannel(), "The memes archive contains **" + files.length + " memes**");
 	}
 }

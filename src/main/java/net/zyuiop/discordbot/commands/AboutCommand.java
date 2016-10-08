@@ -1,5 +1,6 @@
 package net.zyuiop.discordbot.commands;
 
+import net.zyuiop.discordbot.DiscordBot;
 import sx.blah.discord.handle.obj.IMessage;
 
 /**
@@ -15,6 +16,6 @@ public class AboutCommand extends DiscordCommand {
 		StringBuilder builder = new StringBuilder("ICBot, non versionné parce que la flemme, par zyuiop").append("\n");
 		builder.append("Github : https://github.com/zyuiop/ic-discord-bot").append("\n");
 		builder.append("Basé sur Discord4J : https://github.com/austinv11/Discord4J");
-		message.getChannel().sendMessage(builder.toString());
+		DiscordBot.sendMessage(message.getChannel(), builder.toString());
 	}
 }

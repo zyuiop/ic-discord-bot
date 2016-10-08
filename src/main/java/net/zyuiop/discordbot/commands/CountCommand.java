@@ -1,5 +1,6 @@
 package net.zyuiop.discordbot.commands;
 
+import net.zyuiop.discordbot.DiscordBot;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 
@@ -18,14 +19,14 @@ public class CountCommand extends DiscordCommand {
 			if (!user.isBot())
 				totalUsers ++;
 
-		message.getChannel().sendMessage("Il y a actuellement *" + totalUsers + " utilisateurs humains* sur ce Discord.");
+		DiscordBot.sendMessage(message.getChannel(), "Il y a actuellement *" + totalUsers + " utilisateurs humains* sur ce Discord.");
 
 		String[] parts = message.getContent().split(" ");
 		if (parts.length > 1) {
 			try {
 				int wa = Integer.parseInt(parts[1]);
 				double rate = ((double) totalUsers / (double) wa) * 100D;
-				message.getChannel().sendMessage("Cela représente *" + String.format("%.2f", rate) + "%* des utilisateurs de la conv WhatsApp");
+				DiscordBot.sendMessage(message.getChannel(), "Cela représente *" + String.format("%.2f", rate) + "%* des utilisateurs de la conv WhatsApp");
 			} catch (NumberFormatException ignored) {}
 		}
 	}
