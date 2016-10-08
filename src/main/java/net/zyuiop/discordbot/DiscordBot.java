@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Properties;
 import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import net.zyuiop.discordbot.commands.AboutCommand;
 import net.zyuiop.discordbot.commands.ChangeGroupCommand;
 import net.zyuiop.discordbot.commands.CountCommand;
@@ -28,7 +30,7 @@ import sx.blah.discord.util.RateLimitException;
 public class DiscordBot {
 	private static File archiveDir;
 	private static IDiscordClient client;
-	private static BlockingQueue<SendableMessage> messages;
+	private static BlockingQueue<SendableMessage> messages = new LinkedBlockingQueue<>();
 
 	public static void main(String... args) throws DiscordException {
 		Properties properties = new Properties(buildDefault());
