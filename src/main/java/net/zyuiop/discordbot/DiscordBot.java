@@ -94,12 +94,16 @@ public class DiscordBot {
 					long time = message.send();
 
 					while (time > 0) {
-						client.changePresence(false);
+						client.changeStatus(Status.game("RateLimit"));
+						client.changePresence(true);
 						Thread.sleep(time + 100);
 						time = message.send();
+						if (time == 0) {
+							client.changePresence(false);
+							client.changeStatus(Status.empty());
+						}
 					}
 
-					client.changePresence(true);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
