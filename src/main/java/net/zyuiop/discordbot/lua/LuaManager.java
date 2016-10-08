@@ -88,7 +88,7 @@ public class LuaManager {
 		};
 
 		sethook.invoke(LuaValue.varargsOf(new LuaValue[]{thread, hookfunc,
-				LuaValue.EMPTYSTRING, LuaValue.valueOf(1000s) }));
+				LuaValue.EMPTYSTRING, LuaValue.valueOf(1000) }));
 
 		// When we resume the thread, it will run up to 'instruction_count' instructions
 		// then call the hook function which will error out and stop the script.
