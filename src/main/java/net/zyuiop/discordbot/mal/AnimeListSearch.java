@@ -49,7 +49,7 @@ public class AnimeListSearch {
 			private String image_url;
 			private String thumbnail_url;
 			private Payload payload;
-			private double es_score;
+			private String es_score;
 
 			public Anime() {
 			}
@@ -102,11 +102,11 @@ public class AnimeListSearch {
 				this.payload = payload;
 			}
 
-			public double getEs_score() {
+			public String getEs_score() {
 				return es_score;
 			}
 
-			public void setEs_score(double es_score) {
+			public void setEs_score(String es_score) {
 				this.es_score = es_score;
 			}
 
@@ -114,7 +114,7 @@ public class AnimeListSearch {
 				private String media_type;
 				private String start_year;
 				private String aired;
-				private double score;
+				private String score;
 				private String status;
 
 				public Payload() {
@@ -144,11 +144,11 @@ public class AnimeListSearch {
 					this.aired = aired;
 				}
 
-				public double getScore() {
+				public String getScore() {
 					return score;
 				}
 
-				public void setScore(double score) {
+				public void setScore(String score) {
 					this.score = score;
 				}
 
