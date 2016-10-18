@@ -4,18 +4,12 @@ package net.zyuiop.discordbot.json.github;
  * @author zyuiop
  */
 public class GithubCommit {
-	private String message;
 	private String html_url;
 	private String sha;
-	private Author author;
-	private Author committer;
+	private Commit commit;
 
 	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
+		return getCommit().getMessage();
 	}
 
 	public String getHtml_url() {
@@ -35,19 +29,50 @@ public class GithubCommit {
 	}
 
 	public Author getAuthor() {
-		return author;
-	}
-
-	public void setAuthor(Author author) {
-		this.author = author;
+		return getCommit().getAuthor();
 	}
 
 	public Author getCommitter() {
-		return committer;
+		return getCommit().getCommitter();
 	}
 
-	public void setCommitter(Author committer) {
-		this.committer = committer;
+	public Commit getCommit() {
+		return commit;
+	}
+
+	public void setCommit(Commit commit) {
+		this.commit = commit;
+	}
+
+	public static class Commit {
+
+		private String message;
+		private Author author;
+		private Author committer;
+
+		public String getMessage() {
+			return message;
+		}
+
+		public void setMessage(String message) {
+			this.message = message;
+		}
+
+		public Author getAuthor() {
+			return author;
+		}
+
+		public void setAuthor(Author author) {
+			this.author = author;
+		}
+
+		public Author getCommitter() {
+			return committer;
+		}
+
+		public void setCommitter(Author committer) {
+			this.committer = committer;
+		}
 	}
 
 	public static class Author {
