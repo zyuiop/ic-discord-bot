@@ -66,7 +66,11 @@ public class HttpUtil {
 	 */
 	public static String post(URL url, String data) throws IOException {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		conn.setRequestProperty("User-Agent", "Omegle API 1.0");
+		conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+		conn.setRequestProperty("Origin", "http://www.omegle.com");
+		conn.setRequestProperty("Referer", "http://www.omegle.com/");
+		conn.setRequestProperty("Host", "front1.omegle.com");
+
 		conn.setDoOutput(true);
 
 		OutputStreamWriter writer = new OutputStreamWriter(

@@ -7,8 +7,6 @@ import java.util.Map;
 import net.zyuiop.discordbot.DiscordBot;
 import org.apache.commons.codec.Charsets;
 import org.apache.commons.io.IOUtils;
-import org.json.JSONObject;
-import sun.nio.ch.IOUtil;
 import sx.blah.discord.handle.obj.IChannel;
 
 /**
@@ -18,7 +16,7 @@ public class OmegleAPI {
 	/**
 	 * The base omegle url
 	 */
-	public static String BASE_URL = "http://omegle.com";
+	public static String BASE_URL = "http://front9.omegle.com";
 
 	/**
 	 * The URL used to start a chat
@@ -47,10 +45,6 @@ public class OmegleAPI {
 
 	private static Map<String, OmegleSession> SESSIONS = new HashMap<>();
 
-	public static void checkEvents() {
-		SESSIONS.values().forEach(OmegleSession::checkEvents);
-	}
-
 	static {
 		try {
 			OPEN_URL = new URL(BASE_URL + "/start");
@@ -61,6 +55,10 @@ public class OmegleAPI {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static void checkEvents() {
+		SESSIONS.values().forEach(OmegleSession::checkEvents);
 	}
 
 	public static OmegleSession getSession(IChannel channel) {
