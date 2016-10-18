@@ -15,7 +15,7 @@ public class OmegleAPI {
 	/**
 	 * The base omegle url
 	 */
-	public static String BASE_URL = "http://omegle.com";
+	public static String BASE_URL = "http://front1.omegle.com";
 
 	/**
 	 * The URL used to start a chat
