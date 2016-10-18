@@ -4,12 +4,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import net.zyuiop.discordbot.commands.AboutCommand;
 import net.zyuiop.discordbot.commands.AnimeCommand;
 import net.zyuiop.discordbot.commands.ChangeGroupCommand;
+import net.zyuiop.discordbot.commands.CommandEat;
 import net.zyuiop.discordbot.commands.CountCommand;
 import net.zyuiop.discordbot.commands.HelpCommand;
 import net.zyuiop.discordbot.commands.RandomMemeCommand;
@@ -32,7 +34,7 @@ public class DiscordBot {
 	private static IDiscordClient client;
 	private static BlockingQueue<SendableMessage> messages = new LinkedBlockingQueue<>();
 
-	public static void main(String... args) throws DiscordException {
+	public static void main(String... args) throws DiscordException, MalformedURLException {
 		Properties properties = new Properties(buildDefault());
 		File props = new File("icbot.properties");
 
@@ -79,6 +81,7 @@ public class DiscordBot {
 		new LuaCommand();
 		new AnimeCommand("anime");
 		new AnimeCommand("manga");
+		new CommandEat();
 
 		String groups = properties.getProperty("groups");
 		if (groups != null) {
