@@ -5,7 +5,10 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import net.zyuiop.discordbot.DiscordBot;
+import org.apache.commons.codec.Charsets;
+import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
+import sun.nio.ch.IOUtil;
 import sx.blah.discord.handle.obj.IChannel;
 
 /**
@@ -15,7 +18,7 @@ public class OmegleAPI {
 	/**
 	 * The base omegle url
 	 */
-	public static String BASE_URL = "http://front1.omegle.com";
+	public static String BASE_URL = "http://omegle.com";
 
 	/**
 	 * The URL used to start a chat
@@ -67,19 +70,9 @@ public class OmegleAPI {
 			return null;
 		}
 
-		Map<String, Object> vars = new HashMap<>();
-		vars.put("rcs", "1");
-		vars.put("firstevents", "0");
+		String data = IOUtils.toString(OPEN_URL, Charsets.UTF_8);
 
-		URL url = new URL(OPEN_URL + "?" + HttpUtil.implode(vars));
-
-		JSONObject resp = new JSONObject(HttpUtil.post(url, ""));
-
-		if (!resp.has("clientID")) {
-			throw new Exception("Omegle didn't return a client id!");
-		}
-
-		OmegleSession session = new OmegleSession(resp.getString("clientID"), channel);
+		OmegleSession session = new OmegleSession(data.substring(1, data.length() - 1), channel);
 		SESSIONS.put(id, session);
 		return session;
 	}
