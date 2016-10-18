@@ -85,4 +85,7 @@ public class OmegleSession {
 		DiscordBot.sendMessage(channel, "Session Omegle fermée !");
 	}
 
+	public String getSessionId() {
+		return sessionId;
+	}
 }

@@ -29,8 +29,9 @@ public class OmegleCommand extends DiscordCommand {
 
 		String action = args[1];
 		if (action.equalsIgnoreCase("start")) {
-			if (OmegleAPI.openSession(message.getChannel()) != null) {
-				DiscordBot.sendMessage(message.getChannel(), "**Session Omegle ouverte !** Utilisez `!omegle send` pour parler");
+			OmegleSession s;
+			if ((s = OmegleAPI.openSession(message.getChannel())) != null) {
+				DiscordBot.sendMessage(message.getChannel(), "**Session Omegle " + s.getSessionId() + " ouverte !** Utilisez `!omegle send` pour parler");
 			}
 		} else if (action.equalsIgnoreCase("stop")) {
 			OmegleSession session = OmegleAPI.getSession(message.getChannel());
