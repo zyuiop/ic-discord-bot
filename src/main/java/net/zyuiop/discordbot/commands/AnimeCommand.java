@@ -38,7 +38,7 @@ public class AnimeCommand extends DiscordCommand {
 			if (category.getItems().size() != 0) {
 				AnimeListSearch.AnimeListCategory.Anime anime = category.getItems().get(0);
 
-				DiscordBot.sendMessage(message.getChannel(), "*" + anime.getName() + "*\n" + anime.getImage_url() + "\n" +
+				DiscordBot.sendMessage(message.getChannel(), "**" + anime.getName() + "**\n" +
 						(type.equalsIgnoreCase("anime") ? "Aired : " + anime.getPayload().getAired() : "Published : " + anime.getPayload().getPublished()) + "\n" +
 						"Start year : " + anime.getPayload().getStart_year() + "\n" +
 						"Status : " + anime.getPayload().getStatus() + "\n" +
