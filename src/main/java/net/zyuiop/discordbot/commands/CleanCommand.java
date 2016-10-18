@@ -13,6 +13,7 @@ public class CleanCommand extends DiscordCommand {
 
 	@Override
 	public void run(IMessage message) throws Exception {
+		DiscordBot.deleteMessage(message);
 		if (!DiscordBot.removeLastMessage(message.getChannel()))
 			message.getAuthor().getOrCreatePMChannel().sendMessage("Erreur : il n'y a aucun message à supprimer dans le salon " + message.getChannel().getName());
 	}

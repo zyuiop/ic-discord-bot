@@ -145,7 +145,7 @@ public class DiscordBot {
 			return false;
 
 		if (lastMessages.size() > 0) {
-			messages.add(new DeleteMessage(lastMessages.pollLast()));
+			deleteMessage(lastMessages.pollLast());
 			return true;
 		}
 		return false;
@@ -153,6 +153,10 @@ public class DiscordBot {
 
 	private static interface DiscordDelayTask {
 		long send();
+	}
+
+	public static void deleteMessage(IMessage message) {
+		messages.add(new DeleteMessage(message));
 	}
 
 	private static class DeleteMessage implements DiscordDelayTask {
