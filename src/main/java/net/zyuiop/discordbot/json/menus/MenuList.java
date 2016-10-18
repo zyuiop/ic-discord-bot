@@ -1,4 +1,4 @@
-package net.zyuiop.discordbot.menus;
+package net.zyuiop.discordbot.json.menus;
 
 import java.util.List;
 import com.google.gson.annotations.SerializedName;

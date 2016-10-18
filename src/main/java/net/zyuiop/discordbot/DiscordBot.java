@@ -13,6 +13,7 @@ import net.zyuiop.discordbot.commands.AnimeCommand;
 import net.zyuiop.discordbot.commands.ChangeGroupCommand;
 import net.zyuiop.discordbot.commands.CommandEat;
 import net.zyuiop.discordbot.commands.CountCommand;
+import net.zyuiop.discordbot.commands.GitCommand;
 import net.zyuiop.discordbot.commands.HelpCommand;
 import net.zyuiop.discordbot.commands.RandomMemeCommand;
 import net.zyuiop.discordbot.commands.SystemCommand;
@@ -77,6 +78,7 @@ public class DiscordBot {
 		new RandomMemeCommand();
 		new SystemCommand();
 		new AboutCommand();
+		new GitCommand();
 		new CountCommand();
 		new LuaCommand();
 		new AnimeCommand("anime");

@@ -6,7 +6,7 @@ import java.net.URLEncoder;
 import java.util.Arrays;
 import com.google.gson.Gson;
 import net.zyuiop.discordbot.DiscordBot;
-import net.zyuiop.discordbot.mal.AnimeListSearch;
+import net.zyuiop.discordbot.json.mal.AnimeListSearch;
 import org.apache.commons.lang3.StringUtils;
 import sx.blah.discord.handle.obj.IMessage;
 
