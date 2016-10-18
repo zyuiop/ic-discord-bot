@@ -72,7 +72,7 @@ public class OmegleAPI {
 			return null;
 		}
 
-		String data = IOUtils.toString(OPEN_URL, Charsets.UTF_8);
+		String data = HttpUtil.post(OPEN_URL, "");
 
 		OmegleSession session = new OmegleSession(data.substring(1, data.length() - 1), channel);
 		SESSIONS.put(id, session);
