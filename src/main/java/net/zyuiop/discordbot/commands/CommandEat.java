@@ -6,9 +6,12 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import com.stanfy.gsonxml.GsonXmlBuilder;
+import com.stanfy.gsonxml.XmlParserCreator;
 import net.zyuiop.discordbot.DiscordBot;
 import net.zyuiop.discordbot.menus.MenuList;
 import net.zyuiop.discordbot.menus.Rss;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
 import sx.blah.discord.handle.obj.IMessage;
 
 /**
@@ -36,7 +39,19 @@ public class CommandEat extends DiscordCommand {
 			type = "midi";
 		}
 
-		Rss rss = new GsonXmlBuilder().create().fromXml(new InputStreamReader(url.openStream()), Rss.class);
+		XmlParserCreator parserCreator = new XmlParserCreator() {
+			@Override
+			public XmlPullParser createParser() {
+				try {
+					return XmlPullParserFactory.newInstance().newPullParser();
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+		};
+
+
+		Rss rss = new GsonXmlBuilder().setXmlParserCreator(parserCreator).create().fromXml(new InputStreamReader(url.openStream()), Rss.class);
 		if (rss != null && rss.getChannel() != null) {
 			StringBuilder msgBuilder = new StringBuilder("**Offre de restauration du " + type + "**");
 			for (MenuList.Item item : rss.getChannel().getItems()) {
