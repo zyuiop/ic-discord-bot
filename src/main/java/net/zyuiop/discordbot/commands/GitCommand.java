@@ -31,7 +31,6 @@ public class GitCommand extends DiscordCommand {
 			msg.append("\n - ").append(commit.getSha()).append(" : ").append(commit.getMessage());
 			msg.append("\n\tAuthor : ").append(commit.getCommitter().getName()).append(" [").append(commit.getCommitter().getEmail()).append("]");
 			msg.append("\n\tDate : ").append(commit.getCommitter().getDate());
-			msg.append("\n\tMore details : ").append(commit.getHtml_url());
 
 			if (msgBuilder.length() + msg.length() >= 2000) {
 				msgBuilder.append("```");
