@@ -3,13 +3,17 @@ package net.zyuiop.discordbot.commands;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Random;
 import com.stanfy.gsonxml.GsonXmlBuilder;
 import com.stanfy.gsonxml.XmlParserCreator;
 import net.zyuiop.discordbot.DiscordBot;
 import net.zyuiop.discordbot.menus.MenuList;
 import net.zyuiop.discordbot.menus.Rss;
+import org.apache.commons.codec.Charsets;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 import sx.blah.discord.handle.obj.IMessage;
@@ -31,7 +35,7 @@ public class CommandEat extends DiscordCommand {
 		int hour = calendar.get(Calendar.HOUR_OF_DAY);
 		URL url;
 		String type;
-		if (message.getContent().toLowerCase().endsWith("night") || hour > 16) {
+		if (message.getContent().toLowerCase().contains("night") || hour > 16) {
 			url = nightUrl;
 			type = "soir";
 		} else {
@@ -39,14 +43,11 @@ public class CommandEat extends DiscordCommand {
 			type = "midi";
 		}
 
-		XmlParserCreator parserCreator = new XmlParserCreator() {
-			@Override
-			public XmlPullParser createParser() {
-				try {
-					return XmlPullParserFactory.newInstance().newPullParser();
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
+		XmlParserCreator parserCreator = () -> {
+			try {
+				return XmlPullParserFactory.newInstance().newPullParser();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
 			}
 		};
 
@@ -54,18 +55,39 @@ public class CommandEat extends DiscordCommand {
 		Rss rss = new GsonXmlBuilder().setSameNameLists(true).setXmlParserCreator(parserCreator).create().fromXml(new InputStreamReader(url.openStream()), Rss.class);
 		if (rss != null && rss.getChannel() != null) {
 			StringBuilder msgBuilder = new StringBuilder("**Offre de restauration du " + type + "**");
-			for (MenuList.Item item : rss.getChannel().getItems()) {
-				String append = "\n- *" + item.getTitle() + "* : \n" + item.getDescription();
+			boolean all = message.getContent().toLowerCase().contains("all");
+			if (!all)
+				msgBuilder.append("\nAffichage d'un menu aléatoire (!eat all pour tout voir)");
 
-				if (msgBuilder.toString().length() + append.length() >= 2000) {
-					DiscordBot.sendMessage(message.getChannel(), msgBuilder.toString());
-					msgBuilder = new StringBuilder();
+			if (all) {
+				for (MenuList.Item item : rss.getChannel().getItems()) {
+					String append = "\n- *" + convertFromShittyIso(item.getTitle()) + "* : \n\t" + convertFromShittyIso(item.getDescription());
+
+					if (msgBuilder.toString().length() + append.length() >= 2000) {
+						DiscordBot.sendMessage(message.getChannel(), msgBuilder.toString());
+						msgBuilder = new StringBuilder();
+					}
+
+					msgBuilder.append(append);
 				}
+			} else {
+				Random random = new Random();
+				List<MenuList.Item> items = rss.getChannel().getItems();
+				MenuList.Item item = items.get(random.nextInt(items.size()));
 
+				String append = "\n-* " + convertFromShittyIso(item.getTitle()) + " * : \n\t" + convertFromShittyIso(item.getDescription());
 				msgBuilder.append(append);
 			}
 
 			DiscordBot.sendMessage(message.getChannel(), msgBuilder.toString());
 		}
+	}
+
+	private static String convertFromShittyIso(String str) {
+		return convert(Charsets.ISO_8859_1, Charsets.UTF_8, str);
+	}
+
+	private static String convert(Charset source, Charset target, String str) {
+		return new String(str.getBytes(source), target);
 	}
 }
