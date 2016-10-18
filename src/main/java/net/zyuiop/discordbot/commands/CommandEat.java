@@ -52,7 +52,7 @@ public class CommandEat extends DiscordCommand {
 		};
 
 
-		Rss rss = new GsonXmlBuilder().setSameNameLists(true).setXmlParserCreator(parserCreator).create().fromXml(new InputStreamReader(url.openStream()), Rss.class);
+		Rss rss = new GsonXmlBuilder().setSameNameLists(true).setXmlParserCreator(parserCreator).create().fromXml(new InputStreamReader(url.openStream(), Charsets.ISO_8859_1), Rss.class);
 		if (rss != null && rss.getChannel() != null) {
 			StringBuilder msgBuilder = new StringBuilder("**Offre de restauration du " + type + "**");
 			boolean all = message.getContent().toLowerCase().contains("all");
@@ -84,7 +84,7 @@ public class CommandEat extends DiscordCommand {
 	}
 
 	private static String convertFromShittyIso(String str) {
-		return convert(Charsets.UTF_8, Charsets.ISO_8859_1, str);
+		return convert(Charsets.ISO_8859_1, Charsets.UTF_8, str);
 	}
 
 	private static String convert(Charset source, Charset target, String str) {
