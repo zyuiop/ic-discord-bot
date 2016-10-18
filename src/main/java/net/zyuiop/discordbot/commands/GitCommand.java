@@ -34,6 +34,7 @@ public class GitCommand extends DiscordCommand {
 			msg.append("\n\tMore details : ").append(commit.getHtml_url());
 
 			if (msgBuilder.length() + msg.length() >= 2000) {
+				msgBuilder.append("```");
 				DiscordBot.sendMessage(message.getChannel(), msgBuilder.toString());
 				msgBuilder = new StringBuilder();
 			}
@@ -41,6 +42,7 @@ public class GitCommand extends DiscordCommand {
 			msgBuilder.append(msg);
 		}
 
+		msgBuilder.append("```");
 		DiscordBot.sendMessage(message.getChannel(), msgBuilder.toString());
 	}
 }
