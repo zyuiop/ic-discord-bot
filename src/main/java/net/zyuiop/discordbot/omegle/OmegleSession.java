@@ -33,7 +33,7 @@ public class OmegleSession {
 
 			if (resp.equals("null")) {
 				if (++failCount >= 3) {
-
+					disconnect();
 				}
 				return;
 			}

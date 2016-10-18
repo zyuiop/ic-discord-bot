@@ -23,6 +23,7 @@ import net.zyuiop.discordbot.commands.OmegleCommand;
 import net.zyuiop.discordbot.commands.RandomMemeCommand;
 import net.zyuiop.discordbot.commands.SystemCommand;
 import net.zyuiop.discordbot.lua.LuaCommand;
+import net.zyuiop.discordbot.omegle.OmegleAPI;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.handle.obj.IChannel;
@@ -113,6 +114,17 @@ public class DiscordBot {
 						time = message.send();
 					}
 
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
+
+		new Thread(() -> {
+			while (true) {
+				try {
+					Thread.sleep(1000);
+					OmegleAPI.checkEvents();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

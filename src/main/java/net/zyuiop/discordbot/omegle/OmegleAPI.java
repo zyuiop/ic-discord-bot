@@ -47,6 +47,10 @@ public class OmegleAPI {
 
 	private static Map<String, OmegleSession> SESSIONS = new HashMap<>();
 
+	public static void checkEvents() {
+		SESSIONS.values().forEach(OmegleSession::checkEvents);
+	}
+
 	static {
 		try {
 			OPEN_URL = new URL(BASE_URL + "/start");
