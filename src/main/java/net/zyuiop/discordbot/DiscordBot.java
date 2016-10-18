@@ -5,12 +5,16 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayDeque;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import net.zyuiop.discordbot.commands.AboutCommand;
 import net.zyuiop.discordbot.commands.AnimeCommand;
 import net.zyuiop.discordbot.commands.ChangeGroupCommand;
+import net.zyuiop.discordbot.commands.CleanCommand;
 import net.zyuiop.discordbot.commands.CommandEat;
 import net.zyuiop.discordbot.commands.CountCommand;
 import net.zyuiop.discordbot.commands.GitCommand;
@@ -22,7 +26,6 @@ import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.Status;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RateLimitException;
@@ -33,7 +36,8 @@ import sx.blah.discord.util.RateLimitException;
 public class DiscordBot {
 	private static File archiveDir;
 	private static IDiscordClient client;
-	private static BlockingQueue<SendableMessage> messages = new LinkedBlockingQueue<>();
+	private static BlockingQueue<DiscordDelayTask> messages = new LinkedBlockingQueue<>();
+	private static Map<String, ArrayDeque<IMessage>> lastMessages = new HashMap<>();
 
 	public static void main(String... args) throws DiscordException, MalformedURLException {
 		Properties properties = new Properties(buildDefault());
@@ -80,6 +84,7 @@ public class DiscordBot {
 		new AboutCommand();
 		new GitCommand();
 		new CountCommand();
+		new CleanCommand();
 		new LuaCommand();
 		new AnimeCommand("anime");
 		new AnimeCommand("manga");
@@ -98,7 +103,7 @@ public class DiscordBot {
 		new Thread(() -> {
 			while (true) {
 				try {
-					SendableMessage message = messages.take();
+					DiscordDelayTask message = messages.take();
 					long time = message.send();
 
 					while (time > 0) {
@@ -134,7 +139,42 @@ public class DiscordBot {
 		messages.add(new SendableMessage(channel, message));
 	}
 
-	private static class SendableMessage {
+	public static boolean removeLastMessage(IChannel channel) {
+		ArrayDeque<IMessage> lastMessages = DiscordBot.lastMessages.get(channel.getID());
+		if (lastMessages == null)
+			return false;
+
+		if (lastMessages.size() > 0) {
+			messages.add(new DeleteMessage(lastMessages.pollLast()));
+			return true;
+		}
+		return false;
+	}
+
+	private static interface DiscordDelayTask {
+		long send();
+	}
+
+	private static class DeleteMessage implements DiscordDelayTask {
+		private final IMessage delete;
+
+		private DeleteMessage(IMessage delete) {
+			this.delete = delete;
+		}
+
+		public long send() {
+			try {
+				delete.delete();
+			} catch (MissingPermissionsException | DiscordException e) {
+				e.printStackTrace();
+			} catch (RateLimitException e) {
+				return e.getRetryDelay();
+			}
+			return 0;
+		}
+	}
+
+	private static class SendableMessage implements DiscordDelayTask {
 		private final IChannel channel;
 		private final String message;
 
@@ -145,7 +185,12 @@ public class DiscordBot {
 
 		public long send() {
 			try {
-				channel.sendMessage(message);
+				IMessage msg = channel.sendMessage(message);
+				if (!lastMessages.containsKey(msg.getChannel().getID()))
+					lastMessages.put(msg.getChannel().getID(), new ArrayDeque<>());
+				lastMessages.get(msg.getChannel().getID()).addLast(msg);
+				if (lastMessages.get(msg.getChannel().getID()).size() > 20)
+					lastMessages.get(msg.getChannel().getID()).removeFirst();
 			} catch (MissingPermissionsException | DiscordException e) {
 				e.printStackTrace();
 			} catch (RateLimitException e) {
