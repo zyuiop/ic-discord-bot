@@ -84,7 +84,7 @@ public class CommandEat extends DiscordCommand {
 	}
 
 	private static String convertFromShittyIso(String str) {
-		return convert(Charsets.ISO_8859_1, Charsets.UTF_8, str);
+		return convert(Charsets.ISO_8859_1, Charsets.ISO_8859_1, str);
 	}
 
 	private static String convert(Charset source, Charset target, String str) {
