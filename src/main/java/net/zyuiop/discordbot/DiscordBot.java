@@ -19,6 +19,7 @@ import net.zyuiop.discordbot.commands.CommandEat;
 import net.zyuiop.discordbot.commands.CountCommand;
 import net.zyuiop.discordbot.commands.GitCommand;
 import net.zyuiop.discordbot.commands.HelpCommand;
+import net.zyuiop.discordbot.commands.OmegleCommand;
 import net.zyuiop.discordbot.commands.RandomMemeCommand;
 import net.zyuiop.discordbot.commands.SystemCommand;
 import net.zyuiop.discordbot.lua.LuaCommand;
@@ -86,6 +87,7 @@ public class DiscordBot {
 		new CountCommand();
 		new CleanCommand();
 		new LuaCommand();
+		new OmegleCommand();
 		new AnimeCommand("anime");
 		new AnimeCommand("manga");
 		new CommandEat();
