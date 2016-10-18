@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import net.zyuiop.discordbot.DiscordBot;
 import net.zyuiop.discordbot.json.github.GithubCommit;
 import sx.blah.discord.handle.obj.IMessage;
@@ -19,7 +20,8 @@ public class GitCommand extends DiscordCommand {
 	@Override
 	public void run(IMessage message) throws Exception {
 		URL commitUrl = new URL("https://api.github.com/repos/zyuiop/ic-discord-bot/commits");
-		List<GithubCommit> commits = new Gson().fromJson(new InputStreamReader(commitUrl.openStream()), List.class);
+		TypeToken<List<GithubCommit>> typeToken = new TypeToken<List<GithubCommit>>() {};
+		List<GithubCommit> commits = new Gson().fromJson(new InputStreamReader(commitUrl.openStream()), typeToken.getType());
 
 		StringBuilder msgBuilder = new StringBuilder("**Derniers commits sur le bot : ** ```");
 
