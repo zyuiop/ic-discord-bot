@@ -8,6 +8,7 @@ import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import net.zyuiop.discordbot.commands.AboutCommand;
+import net.zyuiop.discordbot.commands.AnimeCommand;
 import net.zyuiop.discordbot.commands.ChangeGroupCommand;
 import net.zyuiop.discordbot.commands.CountCommand;
 import net.zyuiop.discordbot.commands.HelpCommand;
@@ -76,6 +77,8 @@ public class DiscordBot {
 		new AboutCommand();
 		new CountCommand();
 		new LuaCommand();
+		new AnimeCommand("anime");
+		new AnimeCommand("manga");
 
 		String groups = properties.getProperty("groups");
 		if (groups != null) {
