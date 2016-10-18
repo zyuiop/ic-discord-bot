@@ -69,7 +69,7 @@ public class HttpUtil {
 		conn.setRequestProperty("User-Agent", "Mozilla/5.0");
 		conn.setRequestProperty("Origin", "http://www.omegle.com");
 		conn.setRequestProperty("Referer", "http://www.omegle.com/");
-		conn.setRequestProperty("Host", "front1.omegle.com");
+		conn.setRequestProperty("Host", "front9.omegle.com");
 
 		conn.setDoOutput(true);
 
