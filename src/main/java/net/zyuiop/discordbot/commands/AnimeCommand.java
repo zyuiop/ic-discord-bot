@@ -46,7 +46,8 @@ public class AnimeCommand extends DiscordCommand {
 						"Aired : "+ anime.getPayload().getAired() + "\n" +
 						"Start year : " + anime.getPayload().getStart_year() + "\n" +
 						"Status : " + anime.getPayload().getStatus() + "\n" +
-						"Score :  " + anime.getPayload().getScore()
+						"Score :  " + anime.getPayload().getScore() + "\n" +
+						"Page : " + anime.getUrl()
 				);
 				return;
 			}
