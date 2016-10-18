@@ -13,8 +13,11 @@ public class MenuList {
 	private List<Item> items;
 
 	public static class Item {
+		@SerializedName("title")
 		private String title;
+		@SerializedName("link")
 		private String link;
+		@SerializedName("description")
 		private String description;
 
 		public String getTitle() {

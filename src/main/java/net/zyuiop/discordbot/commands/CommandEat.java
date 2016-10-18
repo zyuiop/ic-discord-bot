@@ -51,7 +51,7 @@ public class CommandEat extends DiscordCommand {
 		};
 
 
-		Rss rss = new GsonXmlBuilder().setXmlParserCreator(parserCreator).create().fromXml(new InputStreamReader(url.openStream()), Rss.class);
+		Rss rss = new GsonXmlBuilder().setSameNameLists(true).setXmlParserCreator(parserCreator).create().fromXml(new InputStreamReader(url.openStream()), Rss.class);
 		if (rss != null && rss.getChannel() != null) {
 			StringBuilder msgBuilder = new StringBuilder("**Offre de restauration du " + type + "**");
 			for (MenuList.Item item : rss.getChannel().getItems()) {
