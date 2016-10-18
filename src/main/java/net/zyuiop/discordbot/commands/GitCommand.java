@@ -2,10 +2,10 @@ package net.zyuiop.discordbot.commands;
 
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.List;
 import com.google.gson.Gson;
 import net.zyuiop.discordbot.DiscordBot;
 import net.zyuiop.discordbot.json.github.GithubCommit;
-import net.zyuiop.discordbot.json.github.GithubReference;
 import sx.blah.discord.handle.obj.IMessage;
 
 /**
@@ -13,24 +13,32 @@ import sx.blah.discord.handle.obj.IMessage;
  */
 public class GitCommand extends DiscordCommand {
 	public GitCommand() {
-		super("git", "affiche le dernier commit du bot");
+		super("git", "affiche les 5 derniers commit du bot");
 	}
 
 	@Override
 	public void run(IMessage message) throws Exception {
-		URL urlObject = new URL("https://api.github.com/repos/zyuiop/ic-discord-bot/git/refs/heads/master");
-		GithubReference ref = new Gson().fromJson(new InputStreamReader(urlObject.openStream()), GithubReference.class);
+		URL commitUrl = new URL("https://api.github.com/repos/zyuiop/ic-discord-bot/commits");
+		List<GithubCommit> commits = new Gson().fromJson(new InputStreamReader(commitUrl.openStream()), List.class);
 
-		String sha = ref.getRef();
-		URL commitUrl = new URL("https://api.github.com/repos/zyuiop/ic-discord-bot/git/commits/" + sha);
-		GithubCommit commit = new Gson().fromJson(new InputStreamReader(commitUrl.openStream()), GithubCommit.class);
+		StringBuilder msgBuilder = new StringBuilder("**Derniers commits sur le bot : ** ```");
 
-		StringBuilder msg = new StringBuilder("**Dernier commit sur le bot : **");
-		msg.append("\n```").append(commit.getSha()).append(" : ").append(commit.getMessage());
-		msg.append("\nAuthor : ").append(commit.getCommitter().getName()).append(" [").append(commit.getCommitter().getEmail()).append("]");
-		msg.append("\nDate : ").append(commit.getCommitter().getDate());
-		msg.append("```More details : ").append(commit.getHtml_url());
+		for (int i = 0; i < 5; ++i) {
+			GithubCommit commit = commits.get(i);
+			StringBuilder msg = new StringBuilder();
+			msg.append("\n - ").append(commit.getSha()).append(" : ").append(commit.getMessage());
+			msg.append("\n\tAuthor : ").append(commit.getCommitter().getName()).append(" [").append(commit.getCommitter().getEmail()).append("]");
+			msg.append("\n\tDate : ").append(commit.getCommitter().getDate());
+			msg.append("\n\tMore details : ").append(commit.getHtml_url());
 
-		DiscordBot.sendMessage(message.getChannel(), msg.toString());
+			if (msgBuilder.length() + msg.length() >= 2000) {
+				DiscordBot.sendMessage(message.getChannel(), msgBuilder.toString());
+				msgBuilder = new StringBuilder();
+			}
+
+			msgBuilder.append(msg);
+		}
+
+		DiscordBot.sendMessage(message.getChannel(), msgBuilder.toString());
 	}
 }
