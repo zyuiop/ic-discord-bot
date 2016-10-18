@@ -28,7 +28,7 @@ public class CommandRegistry {
 	}
 
 	public static void handle(IMessage message) throws RateLimitException, DiscordException, MissingPermissionsException {
-		if (message.getContent().startsWith("!")) {
+		if (message.getContent().startsWith("!") || message.getContent().startsWith("/")) {
 			String[] data = message.getContent().split(" ");
 			if (data[0].length() == 1) {
 				return;
