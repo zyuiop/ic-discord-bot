@@ -61,7 +61,7 @@ public class CommandEat extends DiscordCommand {
 
 			if (all) {
 				for (MenuList.Item item : rss.getChannel().getItems()) {
-					String append = "\n- *" + convertFromShittyIso(item.getTitle()) + "* : \n\t" + convertFromShittyIso(item.getDescription());
+					String append = "\n- " + convertFromShittyIso(item.getTitle()) + " : \n\t" + convertFromShittyIso(item.getDescription());
 
 					if (msgBuilder.toString().length() + append.length() >= 2000) {
 						DiscordBot.sendMessage(message.getChannel(), msgBuilder.toString());
@@ -75,7 +75,7 @@ public class CommandEat extends DiscordCommand {
 				List<MenuList.Item> items = rss.getChannel().getItems();
 				MenuList.Item item = items.get(random.nextInt(items.size()));
 
-				String append = "\n-* " + convertFromShittyIso(item.getTitle()) + " * : \n\t" + convertFromShittyIso(item.getDescription());
+				String append = "\n- " + convertFromShittyIso(item.getTitle()) + " : \n\t" + convertFromShittyIso(item.getDescription());
 				msgBuilder.append(append);
 			}
 
@@ -84,7 +84,7 @@ public class CommandEat extends DiscordCommand {
 	}
 
 	private static String convertFromShittyIso(String str) {
-		return convert(Charsets.ISO_8859_1, Charsets.UTF_8, str);
+		return convert(Charsets.ISO_8859_1, Charsets.ISO_8859_1, str);
 	}
 
 	private static String convert(Charset source, Charset target, String str) {
