@@ -1,16 +1,12 @@
 package net.zyuiop.discordbot.commands;
 
-import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 import net.zyuiop.discordbot.DiscordBot;
 import net.zyuiop.discordbot.mal.AnimeListSearch;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import sx.blah.discord.handle.obj.IMessage;
 
@@ -43,7 +39,7 @@ public class AnimeCommand extends DiscordCommand {
 				AnimeListSearch.AnimeListCategory.Anime anime = category.getItems().get(0);
 
 				DiscordBot.sendMessage(message.getChannel(), "*" + anime.getName() + "*\n" + anime.getImage_url() + "\n" +
-						"Aired : "+ anime.getPayload().getAired() + "\n" +
+						(type.equalsIgnoreCase("anime") ? "Aired : " + anime.getPayload().getAired() : "Published : " + anime.getPayload().getPublished()) + "\n" +
 						"Start year : " + anime.getPayload().getStart_year() + "\n" +
 						"Status : " + anime.getPayload().getStatus() + "\n" +
 						"Score :  " + anime.getPayload().getScore() + "\n" +

@@ -114,6 +114,7 @@ public class AnimeListSearch {
 				private String media_type;
 				private String start_year;
 				private String aired;
+				private String published;
 				private String score;
 				private String status;
 
@@ -158,6 +159,14 @@ public class AnimeListSearch {
 
 				public void setStatus(String status) {
 					this.status = status;
+				}
+
+				public String getPublished() {
+					return published;
+				}
+
+				public void setPublished(String published) {
+					this.published = published;
 				}
 			}
 		}
