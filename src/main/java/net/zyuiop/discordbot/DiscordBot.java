@@ -19,11 +19,9 @@ import net.zyuiop.discordbot.commands.CommandEat;
 import net.zyuiop.discordbot.commands.CountCommand;
 import net.zyuiop.discordbot.commands.GitCommand;
 import net.zyuiop.discordbot.commands.HelpCommand;
-import net.zyuiop.discordbot.commands.OmegleCommand;
 import net.zyuiop.discordbot.commands.RandomMemeCommand;
 import net.zyuiop.discordbot.commands.SystemCommand;
 import net.zyuiop.discordbot.lua.LuaCommand;
-import net.zyuiop.discordbot.omegle.OmegleAPI;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.handle.obj.IChannel;
@@ -76,8 +74,7 @@ public class DiscordBot {
 		System.out.println("Initiating memes archive...");
 		archiveDir = new File(properties.getProperty("archivepath"));
 
-		if (!archiveDir.exists())
-			archiveDir.mkdir();
+		if (!archiveDir.exists()) { archiveDir.mkdir(); }
 
 		System.out.println("Initializing commands...");
 		new HelpCommand();
@@ -88,7 +85,6 @@ public class DiscordBot {
 		new CountCommand();
 		new CleanCommand();
 		new LuaCommand();
-		new OmegleCommand();
 		new AnimeCommand("anime");
 		new AnimeCommand("manga");
 		new CommandEat();
@@ -120,17 +116,6 @@ public class DiscordBot {
 			}
 		}).start();
 
-		new Thread(() -> {
-			while (true) {
-				try {
-					Thread.sleep(1000);
-					OmegleAPI.checkEvents();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}).start();
-
 		System.out.println("Connecting to Discord !");
 		client = new ClientBuilder().withToken(token).login();
 		client.getDispatcher().registerListener(new DiscordEventHandler());
@@ -155,8 +140,7 @@ public class DiscordBot {
 
 	public static boolean removeLastMessage(IChannel channel) {
 		ArrayDeque<IMessage> lastMessages = DiscordBot.lastMessages.get(channel.getID());
-		if (lastMessages == null)
-			return false;
+		if (lastMessages == null) { return false; }
 
 		if (lastMessages.size() > 0) {
 			deleteMessage(lastMessages.pollLast());
@@ -165,12 +149,12 @@ public class DiscordBot {
 		return false;
 	}
 
-	private static interface DiscordDelayTask {
-		long send();
-	}
-
 	public static void deleteMessage(IMessage message) {
 		messages.add(new DeleteMessage(message));
+	}
+
+	private static interface DiscordDelayTask {
+		long send();
 	}
 
 	private static class DeleteMessage implements DiscordDelayTask {
@@ -204,11 +188,13 @@ public class DiscordBot {
 		public long send() {
 			try {
 				IMessage msg = channel.sendMessage(message);
-				if (!lastMessages.containsKey(msg.getChannel().getID()))
+				if (!lastMessages.containsKey(msg.getChannel().getID())) {
 					lastMessages.put(msg.getChannel().getID(), new ArrayDeque<>());
+				}
 				lastMessages.get(msg.getChannel().getID()).addLast(msg);
-				if (lastMessages.get(msg.getChannel().getID()).size() > 20)
+				if (lastMessages.get(msg.getChannel().getID()).size() > 20) {
 					lastMessages.get(msg.getChannel().getID()).removeFirst();
+				}
 			} catch (MissingPermissionsException | DiscordException e) {
 				e.printStackTrace();
 			} catch (RateLimitException e) {
