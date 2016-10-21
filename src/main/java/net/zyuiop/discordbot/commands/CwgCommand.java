@@ -32,7 +32,7 @@ public class CwgCommand extends DiscordCommand {
 	@Override
 	public void run(IMessage message) throws Exception {
 		// Réplique de question
-		new File(workDir + "Pose-moi une question").createNewFile();
+		new File(workDir, "Pose-moi une question").createNewFile();
 
 		//Boucle de conversation
 		//Enregistrement de la réplique de l'utilisateur
