@@ -17,6 +17,7 @@ import net.zyuiop.discordbot.commands.ChangeGroupCommand;
 import net.zyuiop.discordbot.commands.CleanCommand;
 import net.zyuiop.discordbot.commands.CommandEat;
 import net.zyuiop.discordbot.commands.CountCommand;
+import net.zyuiop.discordbot.commands.CwgCommand;
 import net.zyuiop.discordbot.commands.GitCommand;
 import net.zyuiop.discordbot.commands.HelpCommand;
 import net.zyuiop.discordbot.commands.RandomMemeCommand;
@@ -76,6 +77,11 @@ public class DiscordBot {
 
 		if (!archiveDir.exists()) { archiveDir.mkdir(); }
 
+		System.out.println("Initializing questions directory...");
+		File questionsDir = new File(properties.getProperty("questionspath"));
+
+		if (!questionsDir.exists()) { questionsDir.mkdir(); }
+
 		System.out.println("Initializing commands...");
 		new HelpCommand();
 		new RandomMemeCommand();
@@ -88,6 +94,7 @@ public class DiscordBot {
 		new AnimeCommand("anime");
 		new AnimeCommand("manga");
 		new CommandEat();
+		new CwgCommand(questionsDir);
 
 		String groups = properties.getProperty("groups");
 		if (groups != null) {
@@ -126,6 +133,7 @@ public class DiscordBot {
 		def.setProperty("token", "");
 		def.setProperty("groups", "info:syscom,syscom:info");
 		def.setProperty("archivepath", "memesarchive");
+		def.setProperty("questionspath", "questions");
 
 		return def;
 	}
