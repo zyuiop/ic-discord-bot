@@ -42,6 +42,21 @@ public class CwgCommand extends DiscordCommand {
 			return;
 		}
 
+		if (args[1].equalsIgnoreCase("!list")) {
+			StringBuilder sb = new StringBuilder("Liste des questions : ```");
+			for (File f : workDir.listFiles()) {
+				if (sb.length() + f.getName().length() + 5 > 2000) {
+					DiscordBot.sendMessage(message.getAuthor().getOrCreatePMChannel(), sb.append("```").toString());
+					sb = new StringBuilder("```");
+				}
+
+				sb.append(f.getName()).append("\n");
+			}
+
+			DiscordBot.sendMessage(message.getAuthor().getOrCreatePMChannel(), sb.append("```").toString());
+			return;
+		}
+
 		String reply = StringUtils.join(Arrays.copyOfRange(args, 1, args.length), " ");
 		reply = StringUtils.capitalize(reply);
 
