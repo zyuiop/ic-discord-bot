@@ -11,17 +11,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import net.zyuiop.discordbot.commands.AboutCommand;
-import net.zyuiop.discordbot.commands.AnimeCommand;
-import net.zyuiop.discordbot.commands.ChangeGroupCommand;
-import net.zyuiop.discordbot.commands.CleanCommand;
-import net.zyuiop.discordbot.commands.CommandEat;
-import net.zyuiop.discordbot.commands.CountCommand;
-import net.zyuiop.discordbot.commands.CwgCommand;
-import net.zyuiop.discordbot.commands.GitCommand;
-import net.zyuiop.discordbot.commands.HelpCommand;
-import net.zyuiop.discordbot.commands.RandomMemeCommand;
-import net.zyuiop.discordbot.commands.SystemCommand;
+
+import net.zyuiop.discordbot.commands.*;
 import net.zyuiop.discordbot.lua.LuaCommand;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
@@ -95,6 +86,7 @@ public class DiscordBot {
 		new AnimeCommand("manga");
 		new CommandEat();
 		new CwgCommand(questionsDir);
+		new CityCommand();
 
 		String groups = properties.getProperty("groups");
 		if (groups != null) {
