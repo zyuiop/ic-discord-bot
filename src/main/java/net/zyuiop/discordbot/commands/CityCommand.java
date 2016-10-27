@@ -18,7 +18,58 @@ public class CityCommand extends DiscordCommand
     @Override
     public void run(IMessage message) throws Exception
     {
-        DiscordBot.sendMessage(message.getChannel(), generateCityName());
+        String[] args = message.getContent().split(" ");
+
+        if(args.length == 1)
+            DiscordBot.sendMessage(message.getChannel(), generateCityName());
+
+        else
+        {
+            boolean error = false;
+
+            switch(args[1])
+            {
+                case "print":
+                    if(args.length != 3 || !isParsable(args[2]))
+                    {
+                        error = true;
+                        break;
+                    }
+                    int n = Integer.parseInt(args[2]);
+                    if(n < 1)
+                    {
+                        DiscordBot.sendMessage(message.getChannel(), generateInsult(message, n));
+                        break;
+                    }
+
+                    String msg = new String();
+                    for(int i=0; i<Math.min(n, 10); ++i)
+                        msg += generateCityName() + '\n';
+
+                    if(n > 10)
+                        msg += "...";
+
+                    DiscordBot.sendMessage(message.getChannel(), msg);
+                    break;
+
+                case "help":
+                    DiscordBot.sendMessage(message.getChannel(),
+                        "*Générateur de nom de ville aléatoire*\n" +
+                        "*par Loris Witschard*\n\n" +
+                        "**Utilisation** :\n" +
+                        "`!city` : génère un nom de ville\n" +
+                        "`!city print n` : génère *n* nom(s) de ville\n" +
+                        "`!city help` : affiche l'aide");
+                    break;
+
+                default:
+                    error = true;
+                    break;
+            }
+
+            if(error)
+                DiscordBot.sendMessage(message.getChannel(), "*Erreur de syntaxe.*");
+        }
     }
 
     private String generateCityName()
@@ -76,7 +127,7 @@ public class CityCommand extends DiscordCommand
 
     private static String getRandomItem(List<String> table)
     {
-        return table.get(rand.nextInt(table.size()));
+        return table.get(randInt(0, table.size()-1));
     }
 
     private static int randInt(int min, int max)
@@ -99,10 +150,48 @@ public class CityCommand extends DiscordCommand
         return false;
     }
 
+    private static String generateInsult(IMessage message, int n)
+    {
+        int h = message.getTimestamp().plusMinutes(10).getHour();
+        String time = (h == 0 ? "minuit" : (h < 10 ? h + "h du mat" : (h == 12 ? "midi" : h + "h")));
+
+        return getRandomItem(Arrays.asList(
+            "Je dois en afficher " + n + " ? Tu te crois malin, " + message.getAuthor() + "?",
+            "Ok, je fais rien du coup ?",
+            "Très bien je vais me faire foutre.",
+            "Je la sentais venir cette blague.",
+            ":middle_finger:",
+            "Bravo " + message.getAuthor() + " ( ͡° ͜ʖ ͡°)",
+            "T'as vraiment que ça à faire à " + time + " ?",
+            "Apparemment, " + message.getAuthor() + " se fait chier.",
+            "Tu ferais pas mieux de bosser un peu ?",
+            (h < 7 ? "Tu dors pas à " + time + ", toi ?" : "Je vais bientôt aller me coucher je pense."),
+            "On applaudit très fort " + message.getAuthor() + " pour son humour subtile.",
+            "Connard.",
+            "Ah l'enfoiré.",
+            "Nique ma vie.",
+            "Oui mais non."));
+    }
+
     private static String capitalize(String str)
     {
         return Character.toUpperCase(str.charAt(0))
                 + str.substring(1, str.length());
+    }
+
+    public static boolean isParsable(String input)
+    {
+        boolean parsable = true;
+        try
+        {
+            Integer.parseInt(input);
+        }
+        catch(NumberFormatException e)
+        {
+            parsable = false;
+        }
+
+        return parsable;
     }
 
     private static Random rand = new Random();
