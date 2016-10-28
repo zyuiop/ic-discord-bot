@@ -31,7 +31,7 @@ public class DiscordBot {
 	private static BlockingQueue<DiscordDelayTask> messages = new LinkedBlockingQueue<>();
 	private static Map<String, ArrayDeque<IMessage>> lastMessages = new HashMap<>();
 
-	public static void main(String... args) throws DiscordException, MalformedURLException {
+	public static void main(String... args) throws Exception, DiscordException, MalformedURLException {
 		Properties properties = new Properties(buildDefault());
 		File props = new File("icbot.properties");
 
@@ -87,6 +87,7 @@ public class DiscordBot {
 		new CommandEat();
 		new CwgCommand(questionsDir);
 		new CityCommand();
+		new InsultCommand();
 
 		String groups = properties.getProperty("groups");
 		if (groups != null) {
