@@ -7,9 +7,8 @@ import java.util.List;
 import java.util.Random;
 import org.apache.commons.io.IOUtils;
 
-/**
- * Created by loris on 28.10.16.
- */
+// Created by Loris Witschard on 28.10.16.
+
 public class Helpers {
 	private static Random rand = new Random();
 
@@ -22,28 +21,8 @@ public class Helpers {
 	}
 
 	public static boolean isVowel(char c) {
-		switch (c) {
-			case 'a':
-			case 'e':
-			case 'i':
-			case 'o':
-			case 'u':
-			case 'y':
-			case 'é':
-			case 'è':
-			case 'ë':
-			case 'ê':
-			case 'ô':
-			case 'ö':
-			case 'â':
-			case 'à':
-			case 'ä':
-			case 'ï':
-			case 'ü':
-			case 'û':
-				return true;
-		}
-		return false;
+		String vowels = "aäâàáæeëêèéiïîìíoöôòóœuüûùúyÿŷỳý";
+		return vowels.indexOf(c) >= 0;
 	}
 
 	public static void extractFile(String name, File target) {

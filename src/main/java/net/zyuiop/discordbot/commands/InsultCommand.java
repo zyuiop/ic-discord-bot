@@ -11,12 +11,10 @@ import net.zyuiop.discordbot.DiscordBot;
 import net.zyuiop.discordbot.Helpers;
 import sx.blah.discord.handle.obj.IMessage;
 
-/**
- * Created by loris on 28.10.16.
- */
+// Created by Loris Witschard on 28.10.16.
 
 public class InsultCommand extends DiscordCommand {
-	private List<String> nouns = new ArrayList<String>();
+	private List<String> nouns = new ArrayList<>();
 	private List<String> intro = Arrays.asList(
 			"Espèce de", "Sale", "Bande de", "Tête de", "Pauvre", "Connard de",
 			"Saloperie de", "Saleté de", "Putain de", "Sous-merde de", "Couillon de",
@@ -110,7 +108,7 @@ public class InsultCommand extends DiscordCommand {
 		String insult = Helpers.getRandomItem(intro);
 
 		String w1 = Helpers.getRandomItem(nouns);
-		if (Helpers.isVowel(w1.charAt(0)) && insult.substring(insult.length() - 2, insult.length()).equals("de")) {
+		if (Helpers.isVowel(w1.charAt(0)) && insult.substring(insult.length() - 3, insult.length()).equals(" de")) {
 			insult = insult.substring(0, insult.length() - 1) + "'" + w1;
 		} else { insult += " " + w1; }
 
