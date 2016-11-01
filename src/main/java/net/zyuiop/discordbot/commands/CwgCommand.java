@@ -64,10 +64,10 @@ public class CwgCommand extends DiscordCommand {
 
 		if (args[1].equalsIgnoreCase("!channel")) {
 			if (wholeChannels.remove(message.getChannel().getID())) {
-				DiscordBot.sendMessage(message.getAuthor().getOrCreatePMChannel(), "**Les messages du channel ne sont plus envoyés au CWG**");
+				DiscordBot.sendMessage(message.getChannel(), "**Les messages du channel ne sont plus envoyés au CWG**");
 			} else {
 				wholeChannels.add(message.getChannel().getID());
-				DiscordBot.sendMessage(message.getAuthor().getOrCreatePMChannel(), "**Les messages du channel sont désormais envoyés au CWG**");
+				DiscordBot.sendMessage(message.getChannel(), "**Les messages du channel sont désormais envoyés au CWG**");
 			}
 			return;
 		}
