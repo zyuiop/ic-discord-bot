@@ -56,6 +56,8 @@ public class CommandRegistry {
 					Matcher matcher = pattern.matcher(content);
 					if (matcher.find()) {
 						content = matcher.group(1);
+					} else {
+						return;
 					}
 				}
 			}
