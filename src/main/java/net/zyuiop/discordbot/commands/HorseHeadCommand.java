@@ -10,25 +10,33 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.Assert.assertEquals;
 
 // Created by Saralfddin on 31.10.16.
 // Edited by Loris Witschard on 01.11.16.
 
-enum Source { AJ, ETI }
 
 public class HorseHeadCommand extends DiscordCommand
 {
-    private Map<Source, String> next = new HashMap<>();
+    private Map<Source, String> next = new ConcurrentHashMap<>(); // Fuck this shit
     private Source src = Source.AJ;
+
+    private enum Source { AJ, ETI }
 
     public HorseHeadCommand() throws Exception
     {
         super("hhh", "affiche un contenu de Horse Head Huffer");
 
-        next.put(Source.AJ, initURL("http://www.anti-joke.com", 5));
-        next.put(Source.ETI, initURL("http://www.explainthisimage.com", 6));
+        new Thread(() -> {
+            try {
+                next.put(Source.AJ, initURL("http://www.anti-joke.com", 5));
+                next.put(Source.ETI, initURL("http://www.explainthisimage.com", 6));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     @Override
@@ -66,6 +74,10 @@ public class HorseHeadCommand extends DiscordCommand
 
             default:
                 return "*Erreur de syntaxe.*";
+        }
+
+        if (!next.containsKey(src)) {
+            return "**Cette commande n'est pas encore prête !**";
         }
 
         Document doc = Jsoup.connect(next.get(src)).get();
