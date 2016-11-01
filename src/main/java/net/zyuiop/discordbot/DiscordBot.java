@@ -107,6 +107,7 @@ public class DiscordBot {
 					long time = message.send();
 
 					while (time > 0) {
+						System.out.println("Delaying actions : " + time + "ms. Current stack size : " + messages.size());
 						Thread.sleep(time + 100);
 						time = message.send();
 					}
