@@ -3,6 +3,7 @@ package net.zyuiop.discordbot;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import net.zyuiop.discordbot.commands.CwgCommand;
 import net.zyuiop.discordbot.commands.DiscordCommand;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.util.DiscordException;
@@ -41,6 +42,12 @@ public class CommandRegistry {
 					DiscordBot.sendMessage(message.getChannel(), "Erreur pendant l'exécution de la commande : " + e.getClass().getName());
 					e.printStackTrace();
 				}
+			}
+		} else if (CwgCommand.isChannelWide(message.getChannel())) {
+			try {
+				CwgCommand.run(message.getContent(), message.getChannel());
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}
