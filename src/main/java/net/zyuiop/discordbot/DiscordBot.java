@@ -88,6 +88,7 @@ public class DiscordBot {
 		new CwgCommand(questionsDir);
 		new CityCommand();
 		new InsultCommand();
+		new HorseHeadCommand();
 
 		String groups = properties.getProperty("groups");
 		if (groups != null) {
