@@ -3,6 +3,8 @@ package net.zyuiop.discordbot;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.zyuiop.discordbot.commands.CwgCommand;
 import net.zyuiop.discordbot.commands.DiscordCommand;
 import sx.blah.discord.handle.obj.IMessage;
@@ -47,8 +49,19 @@ public class CommandRegistry {
 				}
 			}
 		} else if (CwgCommand.isChannelWide(message.getChannel())) {
+			String content = message.getContent();
+			if (message.getAuthor().isBot()) {
+				if (content.toLowerCase().startsWith("[Omegle]")) {
+					Pattern pattern = Pattern.compile("\\[Omegle\\]\\[[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}\\] <stranger> : (.+)");
+					Matcher matcher = pattern.matcher(content);
+					if (matcher.find()) {
+						content = matcher.group(1);
+					}
+				}
+			}
+
 			try {
-				CwgCommand.run(message.getContent(), message.getChannel());
+				CwgCommand.run(content, message.getChannel());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
