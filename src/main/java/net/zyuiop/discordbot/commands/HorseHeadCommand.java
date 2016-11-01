@@ -57,7 +57,7 @@ public class HorseHeadCommand extends DiscordCommand
                 break;
 
             case "help":
-                return	"*Afficheur de contenu Horse Head Huffer v1.0.0*\n" +
+                return	"*Afficheur de contenu Horse Head Huffer v1.0.1*\n" +
                         "*par Saralfddin & Loris Witschard*\n\n" +
                         "**Utilisation** :\n" +
                         "`!hhh aj` : affiche une blague d'*anti-joke.com*\n" +
@@ -140,14 +140,14 @@ public class HorseHeadCommand extends DiscordCommand
         switch(src)
         {
             case AJ:
-                score = doc.select("span.value").text();
+                score = doc.select("span.value").first().text();
                 if(score.length() == 0)
                     return "**0**";
                 int value = Integer.parseInt(score);
                 return value < 0 ? "**" + value + "** :thumbsdown:" : "**+" + value + "** :thumbsup:";
 
             case ETI:
-                score = doc.select("small.value").text();
+                score = doc.select("small.value").first().text();
                 if(score.length() == 0)
                     return "**0/5**";
                 double average = Double.parseDouble(score.split(" ")[0]);
