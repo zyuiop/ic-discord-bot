@@ -32,7 +32,7 @@ public class HorseHeadCommand extends DiscordCommand
             Document doc = Jsoup.connect(url).get();
             Element joke = doc.body().getElementsByClass("item").first().child(0).child(0);
             String data = joke.html().replace("<br>", "\n");
-            data = data.replaceAll("<span class=\"\">(.+)</span>", "*$1*");
+            data = data.replaceAll("<span class=\"decoration\">(.+)</span>", "*$1*");
             return data;
         } catch (IOException e) {
             e.printStackTrace();
