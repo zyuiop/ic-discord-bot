@@ -3,8 +3,11 @@ package net.zyuiop.discordbot.commands;
 import net.zyuiop.discordbot.DiscordBot;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.TextNode;
 import sx.blah.discord.handle.obj.IMessage;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
@@ -22,6 +25,20 @@ public class HorseHeadCommand extends DiscordCommand
 {
     private Map<Source, String> next = new ConcurrentHashMap<>(); // Fuck this shit
     private Source src = Source.AJ;
+
+    private String getDTCJoke() {
+        String url = "http://danstonchat.com/random.html";
+        try {
+            Document doc = Jsoup.connect(url).get();
+            Element joke = doc.body().getElementsByClass("item").first().child(0).child(0);
+            String data = joke.html().replace("<br>", "\n");
+            data = data.replaceAll("<span class=\"\">(.+)</span>", "*$1*");
+            return data;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "*Erreur !*";
+    }
 
     private enum Source { AJ, ETI }
 
@@ -43,7 +60,7 @@ public class HorseHeadCommand extends DiscordCommand
     public void run(IMessage message) throws Exception
     {
         String answer = exec(message.getContent().toLowerCase().split("[\\s]+"));
-        DiscordBot.sendMessage(message.getChannel(), answer);
+        DiscordBot.sendMessageAutoSplit(message.getChannel(), answer);
     }
 
     public String exec(String[] args) throws Exception
@@ -64,12 +81,15 @@ public class HorseHeadCommand extends DiscordCommand
                 src = Source.ETI;
                 break;
 
+            case "dtc":
+                return getDTCJoke();
             case "help":
                 return	"*Afficheur de contenu Horse Head Huffer v1.0.1*\n" +
                         "*par Saralfddin & Loris Witschard*\n\n" +
                         "**Utilisation** :\n" +
                         "`!hhh aj` : affiche une blague d'*anti-joke.com*\n" +
                         "`!hhh eti` : affiche une image d'*explainthisimage.com*\n" +
+                        "`!hhh dtc` : affiche une blague de *danstonchat.com*\n" +
                         "`!hhh help` : affiche l'aide";
 
             default:
