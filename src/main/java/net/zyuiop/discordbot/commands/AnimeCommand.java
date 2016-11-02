@@ -4,7 +4,9 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import com.google.gson.Gson;
 import net.zyuiop.discordbot.DiscordBot;
 import net.zyuiop.discordbot.json.mal.AnimeListSearch;
@@ -58,7 +60,8 @@ public class AnimeCommand extends DiscordCommand {
 						"**Score** :  " + anime.getPayload().getScore() + "\n" +
 						"**Page** : " + anime.getUrl() + "\n" +
 						"**Popularité** : " + popularity  + "\n" +
-						"**Classement** : " + rank
+						"**Classement** : " + rank + "\n" +
+						"**Genres** : " + getGenres(doc)
 				);
 
 				DiscordBot.sendMessageAutoSplit(message.getChannel(), "**Synopsis** : " + synopsis);
@@ -67,5 +70,27 @@ public class AnimeCommand extends DiscordCommand {
 		}
 
 		DiscordBot.sendMessage(message.getChannel(), "Empossible de trouver ce " + type);
+	}
+
+	private String getGenres(Document document) {
+		Element element = extractTypes(document, "genre").get(0);
+		List<String> elts = element.children().stream().filter(e -> e.tagName().equalsIgnoreCase("a")).map(Element::text).collect(Collectors.toList());
+		return StringUtils.join(elts, " ");
+	}
+
+	private List<Element> extractTypes(Document document, String property) {
+		// table / tbody / tr / td / div
+		Element elt = document.body().getElementById("content").child(0).child(0).child(0).child(0).child(0);
+		Elements elts = elt.getElementsByTag("div");
+
+		return elts.stream().filter(e -> {
+			if (e.children().size() > 0) {
+				Elements darkText = e.getElementsByClass("dark_text");
+				if (darkText.size() > 0) {
+					return darkText.get(0).text().toLowerCase().equals(property + ":");
+				}
+			}
+			return false;
+		}).collect(Collectors.toList());
 	}
 }
