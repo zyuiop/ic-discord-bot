@@ -32,8 +32,9 @@ public class HorseHeadCommand extends DiscordCommand
         try {
             Document doc = Jsoup.connect(url).get();
             Element item = doc.body().getElementsByClass("item").first();
+            System.out.println(item.children().toString());
             Element joke = item.child(0).child(0);
-            Element meta = item.child(0).child(0);
+            Element meta = item.child(1).child(0);
             String data = joke.html().replace("<br>", "\n");
             data = data.replaceAll("<span class=\"decoration\">(.+)</span>", "**$1**");
             return data + "\nVotes : " + meta.child(2).text() + ", " + meta.child(3).text();
