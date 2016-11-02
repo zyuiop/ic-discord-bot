@@ -64,11 +64,15 @@ public class AnimeCommand extends DiscordCommand {
 				DiscordBot.sendMessageAutoSplit(message.getChannel(), "**Synopsis** : " + synopsis);
 
 				Document recommendations = Jsoup.connect(anime.getUrl() + "/userrecs").get();
-				Elements recs = recommendations.body().getElementsByClass("js-scrollfix-bottom-rel").get(0).getElementsByClass("borderClass");
+				Elements recs = recommendations.body().getElementsByClass("js-scrollfix-bottom-rel").get(0).children();
 
-				int max = Math.min(recs.size(), 3);
-				for (int i = 0; i < max; i++) {
-					Element recommendation = recs.get(i).child(0).child(0).child(0).child(1); // table / tbody / tr / td
+				int max = Math.min(recs.size(), 8);
+				for (int i = 4; i < max; i++) {
+					Element child = recs.get(i);
+					if (!child.hasClass("borderClass"))
+						continue;
+
+					Element recommendation = child.child(0).child(0).child(0).child(1); // table / tbody / tr / td
 					String recTitle = recommendation.child(1).child(0).child(0).text();
 					String recContent = recommendation.child(2).child(0).text();
 					StringBuilder mmsg = new StringBuilder("**Recommendation ").append(i + 1).append(" : ").append(recTitle).append("**\n");
