@@ -27,12 +27,13 @@ public class HorseHeadCommand extends DiscordCommand
     private Source src = Source.AJ;
 
     private String getDTCJoke() {
-        String url = "http://danstonchat.com/random.html";
+        int id = new Random().nextInt(18085);
+        String url = "http://danstonchat.com/" + id + ".html";
         try {
             Document doc = Jsoup.connect(url).get();
             Element joke = doc.body().getElementsByClass("item").first().child(0).child(0);
             String data = joke.html().replace("<br>", "\n");
-            data = data.replaceAll("<span class=\"decoration\">(.+)</span>", "*$1*");
+            data = data.replaceAll("<span class=\"decoration\">(.+)</span>", "**$1**");
             return data;
         } catch (IOException e) {
             e.printStackTrace();
