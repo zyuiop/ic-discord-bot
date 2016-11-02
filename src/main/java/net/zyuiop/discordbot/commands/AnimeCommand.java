@@ -46,6 +46,7 @@ public class AnimeCommand extends DiscordCommand {
 				Document doc = Jsoup.connect(anime.getUrl()).get();
 				String popularity = doc.body().getElementsByClass("popularity").get(0).child(0).text();
 				String rank = doc.body().getElementsByClass("ranked").get(0).child(0).text();
+				String synopsis = doc.body().getElementsByAttributeValue("itemprop", "description").get(0).child(0).text();
 
 				DiscordBot.sendMessage(message.getChannel(), "**" + anime.getName() + "**\n" +
 						(type.equalsIgnoreCase("anime") ? "**Aired** : " + anime.getPayload().getAired() : "**Published** : " + anime.getPayload().getPublished()) + "\n" +
@@ -56,6 +57,8 @@ public class AnimeCommand extends DiscordCommand {
 						"**Popularité** : " + popularity  + "\n" +
 						"**Classement** : " + rank
 				);
+
+				DiscordBot.sendMessage(message.getChannel(), "**Synopsis** : " + synopsis);
 				return;
 			}
 		}
