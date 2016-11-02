@@ -12,8 +12,20 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import net.zyuiop.discordbot.commands.*;
+import net.zyuiop.discordbot.commands.AboutCommand;
+import net.zyuiop.discordbot.commands.AnimeCommand;
+import net.zyuiop.discordbot.commands.ChangeGroupCommand;
+import net.zyuiop.discordbot.commands.CityCommand;
+import net.zyuiop.discordbot.commands.CleanCommand;
+import net.zyuiop.discordbot.commands.CommandEat;
+import net.zyuiop.discordbot.commands.CountCommand;
+import net.zyuiop.discordbot.commands.CwgCommand;
+import net.zyuiop.discordbot.commands.GitCommand;
+import net.zyuiop.discordbot.commands.HelpCommand;
+import net.zyuiop.discordbot.commands.HorseHeadCommand;
+import net.zyuiop.discordbot.commands.InsultCommand;
+import net.zyuiop.discordbot.commands.RandomMemeCommand;
+import net.zyuiop.discordbot.commands.SystemCommand;
 import net.zyuiop.discordbot.lua.LuaCommand;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
@@ -107,8 +119,7 @@ public class DiscordBot {
 				try {
 					message = messages.take();
 
-					if (!message.send())
-						messages.add(message);
+					if (!message.send()) { messages.add(message); }
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -138,6 +149,16 @@ public class DiscordBot {
 		messages.add(new SendableMessage(channel, message));
 	}
 
+	public static void sendMessageAutoSplit(IChannel channel, String message) {
+		if (message.length() > 2000) {
+			while (message.length() > 2000) {
+				sendMessage(channel, message.substring(0, 2000));
+				message = message.substring(2000);
+			}
+		}
+		sendMessage(channel, message);
+	}
+
 	public static boolean removeLastMessage(IChannel channel) {
 		ArrayDeque<IMessage> lastMessages = DiscordBot.lastMessages.get(channel.getID());
 		if (lastMessages == null) { return false; }
@@ -160,8 +181,7 @@ public class DiscordBot {
 
 		public final boolean send() {
 			if (rateLimit != null) {
-				if (rateLimit.after(new Date()))
-					return false;
+				if (rateLimit.after(new Date())) { return false; }
 			}
 
 			long limit = doSend();
