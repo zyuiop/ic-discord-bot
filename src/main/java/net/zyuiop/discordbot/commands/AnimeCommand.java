@@ -59,9 +59,10 @@ public class AnimeCommand extends DiscordCommand {
 						"**Status** : " + anime.getPayload().getStatus() + "\n" +
 						"**Score** :  " + anime.getPayload().getScore() + "\n" +
 						"**Page** : " + anime.getUrl() + "\n" +
-						"**Popularité** : " + popularity  + "\n" +
-						"**Classement** : " + rank + "\n" +
-						"**Genres** : " + getGenres(doc)
+						"**Popularity** : " + popularity  + "\n" +
+						"**Ranking** : " + rank + "\n" +
+						"**Genres** : " + getGenres(doc) + "\n" +
+						"**Rating** : " + getRating(doc)
 				);
 
 				DiscordBot.sendMessageAutoSplit(message.getChannel(), "**Synopsis** : " + synopsis);
@@ -77,12 +78,12 @@ public class AnimeCommand extends DiscordCommand {
 	private String getGenres(Document document) {
 		Element element = extractTypes(document, "genres").get(0);
 		List<String> elts = element.children().stream().filter(e -> e.tagName().equalsIgnoreCase("a")).map(Element::text).collect(Collectors.toList());
-		return StringUtils.join(elts, " ");
+		return StringUtils.join(elts, ", ");
 	}
 
 	private String getRating(Document document) {
 		Element element = extractTypes(document, "rating").get(0);
-		return element.textNodes().get(1).text() + " /// " + element.textNodes().get(0).text() + " /// " + element.text();
+		return element.text();
 	}
 
 	private List<Element> extractTypes(Document document, String property) {
