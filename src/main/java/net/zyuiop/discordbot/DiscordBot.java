@@ -104,11 +104,14 @@ public class DiscordBot {
 		new Thread(() -> {
 			while (true) {
 				DiscordDelayTask message = null;
-				while (message == null)
-					message = messages.peek();
+				try {
+					message = messages.take();
 
-				if (message.send())
-					messages.remove(message);
+					if (!message.send())
+						messages.add(message);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}).start();
 
