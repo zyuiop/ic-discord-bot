@@ -73,7 +73,7 @@ public class AnimeCommand extends DiscordCommand {
 	}
 
 	private String getGenres(Document document) {
-		Element element = extractTypes(document, "genre").get(0);
+		Element element = extractTypes(document, "genres").get(0);
 		List<String> elts = element.children().stream().filter(e -> e.tagName().equalsIgnoreCase("a")).map(Element::text).collect(Collectors.toList());
 		return StringUtils.join(elts, " ");
 	}
@@ -90,10 +90,8 @@ public class AnimeCommand extends DiscordCommand {
 
 		return elts.stream().filter(e -> {
 			if (e.children().size() > 0) {
-				System.out.print("cc");
 				Elements darkText = e.getElementsByClass("dark_text");
 				if (darkText.size() > 0) {
-					System.out.print("hoho " + darkText.get(0).text());
 					return darkText.get(0).text().toLowerCase().equals(property + ":");
 				}
 			}
