@@ -1,6 +1,7 @@
 package net.zyuiop.discordbot.commands;
 
 import net.zyuiop.discordbot.DiscordBot;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -37,6 +38,7 @@ public class HorseHeadCommand extends DiscordCommand
             Element meta = item.child(1).child(0);
             String data = joke.html().replace("<br>", "\n");
             data = data.replaceAll("<span class=\"decoration\">(.+)</span>", "**$1**");
+            data = StringEscapeUtils.unescapeHtml4(data);
             return data + "\nVotes : " + meta.child(0).text() + ", " + meta.child(1).text();
         } catch (IOException e) {
             e.printStackTrace();
