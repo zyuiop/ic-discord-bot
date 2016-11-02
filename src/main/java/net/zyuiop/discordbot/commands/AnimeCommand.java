@@ -47,12 +47,12 @@ public class AnimeCommand extends DiscordCommand {
 				String popularity = doc.body().getElementsByClass("popularity").get(0).child(0).text();
 
 				DiscordBot.sendMessage(message.getChannel(), "**" + anime.getName() + "**\n" +
-						(type.equalsIgnoreCase("anime") ? "Aired : " + anime.getPayload().getAired() : "Published : " + anime.getPayload().getPublished()) + "\n" +
-						"Start year : " + anime.getPayload().getStart_year() + "\n" +
-						"Status : " + anime.getPayload().getStatus() + "\n" +
-						"Score :  " + anime.getPayload().getScore() + "\n" +
-						"Page : " + anime.getUrl() + "\n" +
-						"Popularité : " + popularity
+						(type.equalsIgnoreCase("anime") ? "**Aired** : " + anime.getPayload().getAired() : "**Published** : " + anime.getPayload().getPublished()) + "\n" +
+						"**Start year** : " + anime.getPayload().getStart_year() + "\n" +
+						"**Status** : " + anime.getPayload().getStatus() + "\n" +
+						"**Score** :  " + anime.getPayload().getScore() + "\n" +
+						"**Page** : " + anime.getUrl() + "\n" +
+						"**Popularité** : " + popularity
 				);
 				return;
 			}
