@@ -8,6 +8,8 @@ import com.google.gson.Gson;
 import net.zyuiop.discordbot.DiscordBot;
 import net.zyuiop.discordbot.json.mal.AnimeListSearch;
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import sx.blah.discord.handle.obj.IMessage;
 
 /**
@@ -38,12 +40,16 @@ public class AnimeCommand extends DiscordCommand {
 			if (category.getItems().size() != 0) {
 				AnimeListSearch.AnimeListCategory.Anime anime = category.getItems().get(0);
 
+				Document doc = Jsoup.connect(anime.getUrl()).get();
+				String popularity = doc.body().getElementsByClass("popularity").get(0).text();
+
 				DiscordBot.sendMessage(message.getChannel(), "**" + anime.getName() + "**\n" +
 						(type.equalsIgnoreCase("anime") ? "Aired : " + anime.getPayload().getAired() : "Published : " + anime.getPayload().getPublished()) + "\n" +
 						"Start year : " + anime.getPayload().getStart_year() + "\n" +
 						"Status : " + anime.getPayload().getStatus() + "\n" +
 						"Score :  " + anime.getPayload().getScore() + "\n" +
-						"Page : " + anime.getUrl()
+						"Page : " + anime.getUrl() + "\n" +
+						"Popularité : " + popularity
 				);
 				return;
 			}
