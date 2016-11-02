@@ -14,6 +14,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import net.zyuiop.discordbot.commands.AboutCommand;
 import net.zyuiop.discordbot.commands.AnimeCommand;
+import net.zyuiop.discordbot.commands.AnimeRecommendCommand;
 import net.zyuiop.discordbot.commands.ChangeGroupCommand;
 import net.zyuiop.discordbot.commands.CityCommand;
 import net.zyuiop.discordbot.commands.CleanCommand;
@@ -97,6 +98,7 @@ public class DiscordBot {
 		new LuaCommand();
 		new AnimeCommand("anime");
 		new AnimeCommand("manga");
+		new AnimeRecommendCommand();
 		new CommandEat();
 		new CwgCommand(questionsDir);
 		new CityCommand();
