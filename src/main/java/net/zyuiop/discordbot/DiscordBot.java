@@ -27,6 +27,8 @@ import net.zyuiop.discordbot.commands.HorseHeadCommand;
 import net.zyuiop.discordbot.commands.InsultCommand;
 import net.zyuiop.discordbot.commands.RandomMemeCommand;
 import net.zyuiop.discordbot.commands.SystemCommand;
+import net.zyuiop.discordbot.commands.TopAnimeCommand;
+import net.zyuiop.discordbot.json.mal.TopAnime;
 import net.zyuiop.discordbot.lua.LuaCommand;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
@@ -104,6 +106,7 @@ public class DiscordBot {
 		new CityCommand();
 		new InsultCommand();
 		new HorseHeadCommand();
+		new TopAnimeCommand();
 
 		String groups = properties.getProperty("groups");
 		if (groups != null) {
