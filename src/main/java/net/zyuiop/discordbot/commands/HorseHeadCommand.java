@@ -41,6 +41,18 @@ public class HorseHeadCommand extends DiscordCommand
         return "*Erreur !*";
     }
 
+    private String getVDMJoke() {
+        String url = "http://www.viedemerde.fr/aleatoire";
+        try {
+            Document doc = Jsoup.connect(url).get();
+            Element joke = doc.body().getElementsByClass("post").first().child(1).child(0);
+            return joke.text();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "*Erreur !*";
+    }
+
     private enum Source { AJ, ETI }
 
     public HorseHeadCommand() throws Exception
@@ -84,6 +96,8 @@ public class HorseHeadCommand extends DiscordCommand
 
             case "dtc":
                 return getDTCJoke();
+            case "vdm":
+                return getVDMJoke();
             case "help":
                 return	"*Afficheur de contenu Horse Head Huffer v1.0.1*\n" +
                         "*par Saralfddin & Loris Witschard*\n\n" +
@@ -91,6 +105,7 @@ public class HorseHeadCommand extends DiscordCommand
                         "`!hhh aj` : affiche une blague d'*anti-joke.com*\n" +
                         "`!hhh eti` : affiche une image d'*explainthisimage.com*\n" +
                         "`!hhh dtc` : affiche une blague de *danstonchat.com*\n" +
+                        "`!hhh vdm` : affiche une blague de *VDM*\n" +
                         "`!hhh help` : affiche l'aide";
 
             default:
