@@ -37,7 +37,7 @@ public class HorseHeadCommand extends DiscordCommand
             Element meta = item.child(1).child(0);
             String data = joke.html().replace("<br>", "\n");
             data = data.replaceAll("<span class=\"decoration\">(.+)</span>", "**$1**");
-            return data + "\nVotes : " + meta.child(2).text() + ", " + meta.child(3).text();
+            return data + "\nVotes : " + meta.child(0).text() + ", " + meta.child(1).text();
         } catch (IOException e) {
             e.printStackTrace();
         }
