@@ -31,13 +31,12 @@ public class AnimeCommand extends DiscordCommand {
 			DiscordBot.sendMessage(message.getChannel(), "Utilisation : !" + type + " <titre>");
 			return;
 		}
-		String title = StringUtils.join(Arrays.copyOfRange(parts, 1, parts.length));
+		String title = StringUtils.join(Arrays.copyOfRange(parts, 1, parts.length), " ");
 		String url = "https://myanimelist.net/search/prefix.json?type=" + type + "&keyword=" + URLEncoder.encode(title, "UTF-8") + "&v=1";
 
 		Logger.getAnonymousLogger().info(url);
 		URL urlObject = new URL(url);
 		AnimeListSearch search = new Gson().fromJson(new InputStreamReader(urlObject.openStream()), AnimeListSearch.class);
-		Logger.getAnonymousLogger().info(search.toString());
 
 		if (search != null && search.getCategories() != null && search.getCategories().size() != 0) {
 			AnimeListSearch.AnimeListCategory category = search.getCategories().get(0);
