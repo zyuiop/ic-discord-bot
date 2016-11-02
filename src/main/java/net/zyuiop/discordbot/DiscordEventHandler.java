@@ -1,19 +1,12 @@
 package net.zyuiop.discordbot;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import net.zyuiop.discordbot.commands.DiscordCommand;
-import org.apache.commons.io.IOUtils;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.events.MessageUpdateEvent;
@@ -37,10 +30,12 @@ public class DiscordEventHandler {
 		IMessage message = event.getMessage();
 		onMessage(message);
 	}
+
 	@EventSubscriber
 	public void onMessage(MessageUpdateEvent event) throws RateLimitException, DiscordException, MissingPermissionsException {
-		if (event.getNewMessage().getContent().equalsIgnoreCase(event.getOldMessage().getContent()))
+		if (event.getNewMessage().getContent().equalsIgnoreCase(event.getOldMessage().getContent())) {
 			return;
+		}
 
 		IMessage message = event.getNewMessage();
 		onMessage(message);
