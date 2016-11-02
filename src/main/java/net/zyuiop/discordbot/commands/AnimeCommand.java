@@ -41,7 +41,7 @@ public class AnimeCommand extends DiscordCommand {
 				AnimeListSearch.AnimeListCategory.Anime anime = category.getItems().get(0);
 
 				Document doc = Jsoup.connect(anime.getUrl()).get();
-				String popularity = doc.body().getElementsByClass("popularity").get(0).text();
+				String popularity = doc.body().getElementsByClass("popularity").get(0).child(0).text();
 
 				DiscordBot.sendMessage(message.getChannel(), "**" + anime.getName() + "**\n" +
 						(type.equalsIgnoreCase("anime") ? "Aired : " + anime.getPayload().getAired() : "Published : " + anime.getPayload().getPublished()) + "\n" +
