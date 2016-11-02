@@ -22,53 +22,18 @@ import static org.junit.Assert.assertEquals;
 // Edited by Loris Witschard on 01.11.16.
 
 
-public class HorseHeadCommand extends DiscordCommand
+public class JokeCommand extends DiscordCommand
 {
     private Map<Source, String> next = new ConcurrentHashMap<>(); // Fuck this shit
     private Source src = Source.AJ;
 
-    private String getDTCJoke() {
-        int id = new Random().nextInt(18085);
-        String url = "http://danstonchat.com/" + id + ".html";
-        try {
-            Document doc = Jsoup.connect(url).get();
-            Element item = doc.body().getElementsByClass("item").first();
-            System.out.println(item.children().toString());
-            Element joke = item.child(0).child(0);
-            Element meta = item.child(1).child(0);
-            String data = joke.html().replace("<br>", "\n");
-            data = data.replaceAll("<span class=\"decoration\">(.+)</span>", "**$1**");
-            data = StringEscapeUtils.unescapeHtml4(data);
-            return data + "\nVotes : " + meta.child(0).text() + ", " + meta.child(1).text();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "*Erreur !*";
-    }
-
-    private String getVDMJoke() {
-        String url = "http://www.viedemerde.fr/aleatoire";
-        try {
-            Document doc = Jsoup.connect(url).userAgent("curl").get();
-            Element joke = doc.body().getElementsByClass("article").first();
-
-            String text = joke.child(0).child(0).text();
-            Element dateBlock = joke.child(2);
-            Element votes = dateBlock.child(0);
-            String valid = votes.child(1).child(1).text();
-            String tlbm = votes.child(2).child(1).text();
-            return text + "\n(Catégorie : " + dateBlock.child(1).child(0).text() + ", Je valide : " + valid + ", TLBM : " + tlbm + ")";
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "*Erreur !*";
-    }
 
     private enum Source { AJ, ETI }
 
-    public HorseHeadCommand() throws Exception
+    public JokeCommand() throws Exception
     {
-        super("hhh", "affiche un contenu de Horse Head Huffer");
+        super("joke", "affiche une blague (alias !hhh)");
+        addAlias("hhh");
 
         new Thread(() -> {
             try {
@@ -118,14 +83,14 @@ public class HorseHeadCommand extends DiscordCommand
                 }
                 return "Erreur !";
             case "help":
-                return	"*Afficheur de contenu Horse Head Huffer v1.0.1*\n" +
+                return	"*Afficheur de blagues v1.0.1*\n" +
                         "*par Saralfddin & Loris Witschard*\n\n" +
                         "**Utilisation** :\n" +
-                        "`!hhh aj` : affiche une blague d'*anti-joke.com*\n" +
-                        "`!hhh eti` : affiche une image d'*explainthisimage.com*\n" +
-                        "`!hhh dtc` : affiche une blague de *danstonchat.com*\n" +
-                        "`!hhh vdm` : affiche une blague de *VDM*\n" +
-                        "`!hhh help` : affiche l'aide";
+                        "`!joke aj` : affiche une blague d'*anti-joke.com*\n" +
+                        "`!joke eti` : affiche une image d'*explainthisimage.com*\n" +
+                        "`!joke dtc` : affiche une blague de *danstonchat.com*\n" +
+                        "`!joke vdm` : affiche une blague de *VDM*\n" +
+                        "`!joke help` : affiche l'aide";
 
             default:
                 return "*Erreur de syntaxe.*";
@@ -141,6 +106,44 @@ public class HorseHeadCommand extends DiscordCommand
         next.replace(src, getNext(doc));
 
         return content;
+    }
+
+
+    private String getDTCJoke() {
+        int id = new Random().nextInt(18085);
+        String url = "http://danstonchat.com/" + id + ".html";
+        try {
+            Document doc = Jsoup.connect(url).get();
+            Element item = doc.body().getElementsByClass("item").first();
+            System.out.println(item.children().toString());
+            Element joke = item.child(0).child(0);
+            Element meta = item.child(1).child(0);
+            String data = joke.html().replace("<br>", "\n");
+            data = data.replaceAll("<span class=\"decoration\">(.+)</span>", "**$1**");
+            data = StringEscapeUtils.unescapeHtml4(data);
+            return data + "\nVotes : " + meta.child(0).text() + ", " + meta.child(1).text();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "*Erreur !*";
+    }
+
+    private String getVDMJoke() {
+        String url = "http://www.viedemerde.fr/aleatoire";
+        try {
+            Document doc = Jsoup.connect(url).userAgent("curl").get();
+            Element joke = doc.body().getElementsByClass("article").first();
+
+            String text = joke.child(0).child(0).text();
+            Element dateBlock = joke.child(2);
+            Element votes = dateBlock.child(0);
+            String valid = votes.child(1).child(1).text();
+            String tlbm = votes.child(2).child(1).text();
+            return text + "\n(Catégorie : " + dateBlock.child(1).child(0).text() + ", Je valide : " + valid + ", TLBM : " + tlbm + ")";
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "*Erreur !*";
     }
 
     private String initURL(String url, int postNbScale) throws Exception

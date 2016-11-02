@@ -21,6 +21,7 @@ import sx.blah.discord.handle.obj.IMessage;
 public class TopAnimeCommand extends DiscordCommand {
 	public TopAnimeCommand() {
 		super("topanime", "affiche la liste d'une personne sur MaL");
+		addAlias("animelist");
 	}
 
 	@Override

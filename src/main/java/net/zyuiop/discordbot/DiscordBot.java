@@ -23,12 +23,11 @@ import net.zyuiop.discordbot.commands.CountCommand;
 import net.zyuiop.discordbot.commands.CwgCommand;
 import net.zyuiop.discordbot.commands.GitCommand;
 import net.zyuiop.discordbot.commands.HelpCommand;
-import net.zyuiop.discordbot.commands.HorseHeadCommand;
+import net.zyuiop.discordbot.commands.JokeCommand;
 import net.zyuiop.discordbot.commands.InsultCommand;
 import net.zyuiop.discordbot.commands.RandomMemeCommand;
 import net.zyuiop.discordbot.commands.SystemCommand;
 import net.zyuiop.discordbot.commands.TopAnimeCommand;
-import net.zyuiop.discordbot.json.mal.TopAnime;
 import net.zyuiop.discordbot.lua.LuaCommand;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
@@ -105,7 +104,7 @@ public class DiscordBot {
 		new CwgCommand(questionsDir);
 		new CityCommand();
 		new InsultCommand();
-		new HorseHeadCommand();
+		new JokeCommand();
 		new TopAnimeCommand();
 
 		String groups = properties.getProperty("groups");

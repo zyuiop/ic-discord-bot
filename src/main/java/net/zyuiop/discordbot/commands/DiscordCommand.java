@@ -16,6 +16,10 @@ public abstract class DiscordCommand {
 		CommandRegistry.registerCommand(this);
 	}
 
+	protected void addAlias(String alisas) {
+		CommandRegistry.registerAlias(name, alisas);
+	}
+
 	public DiscordCommand(String name, String description) {
 		this(name);
 		this.description = description;

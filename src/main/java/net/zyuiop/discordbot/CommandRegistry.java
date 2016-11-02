@@ -5,8 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
 import net.zyuiop.discordbot.commands.CwgCommand;
 import net.zyuiop.discordbot.commands.DiscordCommand;
+import org.apache.commons.lang3.Validate;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.MissingPermissionsException;
@@ -17,12 +20,20 @@ import sx.blah.discord.util.RateLimitException;
  */
 public class CommandRegistry {
 	private static Map<String, DiscordCommand> commandMap = new HashMap<>();
+	private static Map<String, String> aliases = new HashMap<>();
 
 	public static void registerCommand(DiscordCommand command) {
 		commandMap.put(command.getName().toLowerCase(), command);
 	}
 
+	public static void registerAlias(String command, String alias) {
+		Validate.isTrue(!command.equalsIgnoreCase(alias));
+		aliases.put(alias, command);
+	}
+
 	public static DiscordCommand getCommand(String tag) {
+		if (aliases.containsKey(tag))
+			return getCommand(aliases.get(tag));
 		return commandMap.get(tag.toLowerCase());
 	}
 
