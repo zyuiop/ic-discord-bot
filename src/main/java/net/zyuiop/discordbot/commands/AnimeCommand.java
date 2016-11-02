@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Arrays;
+import java.util.logging.Logger;
 import com.google.gson.Gson;
 import net.zyuiop.discordbot.DiscordBot;
 import net.zyuiop.discordbot.json.mal.AnimeListSearch;
@@ -32,8 +33,11 @@ public class AnimeCommand extends DiscordCommand {
 		}
 		String title = StringUtils.join(Arrays.copyOfRange(parts, 1, parts.length));
 		String url = "https://myanimelist.net/search/prefix.json?type=" + type + "&keyword=" + URLEncoder.encode(title, "UTF-8") + "&v=1";
+
+		Logger.getAnonymousLogger().info(url);
 		URL urlObject = new URL(url);
 		AnimeListSearch search = new Gson().fromJson(new InputStreamReader(urlObject.openStream()), AnimeListSearch.class);
+		Logger.getAnonymousLogger().info(search.toString());
 
 		if (search != null && search.getCategories() != null && search.getCategories().size() != 0) {
 			AnimeListSearch.AnimeListCategory category = search.getCategories().get(0);

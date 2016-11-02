@@ -1,5 +1,6 @@
 package net.zyuiop.discordbot.json.mal;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -168,7 +169,47 @@ public class AnimeListSearch {
 				public void setPublished(String published) {
 					this.published = published;
 				}
+
+				@Override
+				public String toString() {
+					return "Payload{" +
+							"media_type='" + media_type + '\'' +
+							", start_year='" + start_year + '\'' +
+							", aired='" + aired + '\'' +
+							", published='" + published + '\'' +
+							", score='" + score + '\'' +
+							", status='" + status + '\'' +
+							'}';
+				}
+			}
+
+			@Override
+			public String toString() {
+				return "Anime{" +
+						"id=" + id +
+						", name='" + name + '\'' +
+						", url='" + url + '\'' +
+						", image_url='" + image_url + '\'' +
+						", thumbnail_url='" + thumbnail_url + '\'' +
+						", payload=" + payload +
+						", es_score='" + es_score + '\'' +
+						"}\n";
 			}
 		}
+
+		@Override
+		public String toString() {
+			return "AnimeListCategory{" +
+					"type='" + type + '\'' +
+					", items=" + Arrays.toString(items.toArray()) +
+					'}';
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "AnimeListSearch{" +
+				"categories=" + categories +
+				'}';
 	}
 }
