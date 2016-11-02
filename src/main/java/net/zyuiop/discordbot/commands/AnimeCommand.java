@@ -11,6 +11,8 @@ import net.zyuiop.discordbot.json.mal.AnimeListSearch;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import sx.blah.discord.handle.obj.IMessage;
 
 /**
@@ -59,7 +61,21 @@ public class AnimeCommand extends DiscordCommand {
 						"**Classement** : " + rank
 				);
 
-				DiscordBot.sendMessage(message.getChannel(), "**Synopsis** : " + synopsis);
+				DiscordBot.sendMessageAutoSplit(message.getChannel(), "**Synopsis** : " + synopsis);
+
+				Document recommendations = Jsoup.connect(anime.getUrl() + "/userrecs").get();
+				Elements recs = recommendations.body().getElementsByClass("js-scrollfix-bottom-rel").get(0).getElementsByClass("borderClass");
+
+				int max = Math.min(recs.size(), 3);
+				for (int i = 0; i < max; i++) {
+					Element recommendation = recs.get(i).child(0).child(0).child(0).child(1); // table / tbody / tr / td
+					String recTitle = recommendation.child(1).child(0).child(0).text();
+					String recContent = recommendation.child(2).child(0).text();
+					StringBuilder mmsg = new StringBuilder("**Recommendation ").append(i + 1).append(" : ").append(recTitle).append("**\n");
+					mmsg.append(recContent);
+					DiscordBot.sendMessageAutoSplit(message.getChannel(), mmsg.toString());
+
+				}
 				return;
 			}
 		}
