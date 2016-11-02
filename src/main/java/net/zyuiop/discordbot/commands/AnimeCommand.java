@@ -65,6 +65,8 @@ public class AnimeCommand extends DiscordCommand {
 				);
 
 				DiscordBot.sendMessageAutoSplit(message.getChannel(), "**Synopsis** : " + synopsis);
+
+				System.out.println("Rating " + getRating(doc));
 				return;
 			}
 		}
@@ -80,7 +82,7 @@ public class AnimeCommand extends DiscordCommand {
 
 	private String getRating(Document document) {
 		Element element = extractTypes(document, "rating").get(0);
-		return element.textNodes().get(1).text();
+		return element.textNodes().get(1).text() + " /// " + element.textNodes().get(0).text() + " /// " + element.text();
 	}
 
 	private List<Element> extractTypes(Document document, String property) {
