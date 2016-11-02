@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayDeque;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -102,19 +103,12 @@ public class DiscordBot {
 
 		new Thread(() -> {
 			while (true) {
-				try {
-					DiscordDelayTask message = messages.take();
-					long time = message.send();
+				DiscordDelayTask message = null;
+				while (message == null)
+					message = messages.peek();
 
-					while (time > 0) {
-						System.out.println("Delaying actions : " + time + "ms. Current stack size : " + messages.size());
-						Thread.sleep(time + 100);
-						time = message.send();
-					}
-
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				if (message.send())
+					messages.remove(message);
 			}
 		}).start();
 
@@ -156,18 +150,35 @@ public class DiscordBot {
 		messages.add(new DeleteMessage(message));
 	}
 
-	private static interface DiscordDelayTask {
-		long send();
+	private static abstract class DiscordDelayTask {
+		private Date rateLimit = null;
+
+		protected abstract long doSend();
+
+		public final boolean send() {
+			if (rateLimit != null) {
+				if (rateLimit.after(new Date()))
+					return false;
+			}
+
+			long limit = doSend();
+			if (limit > 0) {
+				rateLimit = new Date(System.currentTimeMillis() + limit + 100);
+				return false;
+			}
+
+			return true;
+		}
 	}
 
-	private static class DeleteMessage implements DiscordDelayTask {
+	private static class DeleteMessage extends DiscordDelayTask {
 		private final IMessage delete;
 
 		private DeleteMessage(IMessage delete) {
 			this.delete = delete;
 		}
 
-		public long send() {
+		public long doSend() {
 			try {
 				delete.delete();
 			} catch (MissingPermissionsException | DiscordException e) {
@@ -179,7 +190,7 @@ public class DiscordBot {
 		}
 	}
 
-	private static class SendableMessage implements DiscordDelayTask {
+	private static class SendableMessage extends DiscordDelayTask {
 		private final IChannel channel;
 		private final String message;
 
@@ -188,7 +199,7 @@ public class DiscordBot {
 			this.message = message;
 		}
 
-		public long send() {
+		public long doSend() {
 			try {
 				IMessage msg = channel.sendMessage(message);
 				if (!lastMessages.containsKey(msg.getChannel().getID())) {
