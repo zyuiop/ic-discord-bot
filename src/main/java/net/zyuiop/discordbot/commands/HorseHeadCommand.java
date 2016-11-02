@@ -33,7 +33,7 @@ public class HorseHeadCommand extends DiscordCommand
             Document doc = Jsoup.connect(url).get();
             Element item = doc.body().getElementsByClass("item").first();
             Element joke = item.child(0).child(0);
-            Element meta = item.child(1).child(0);
+            Element meta = item.child(0).child(0);
             String data = joke.html().replace("<br>", "\n");
             data = data.replaceAll("<span class=\"decoration\">(.+)</span>", "**$1**");
             return data + "\nVotes : " + meta.child(2).text() + ", " + meta.child(3).text();
@@ -105,7 +105,15 @@ public class HorseHeadCommand extends DiscordCommand
             case "dtc":
                 return getDTCJoke();
             case "vdm":
-                return getVDMJoke();
+                int attempts = 0;
+                while (attempts < 10) {
+                    try {
+                        return getVDMJoke();
+                    } catch (Exception e) {
+                        attempts++;
+                    }
+                }
+                return "Erreur !";
             case "help":
                 return	"*Afficheur de contenu Horse Head Huffer v1.0.1*\n" +
                         "*par Saralfddin & Loris Witschard*\n\n" +
