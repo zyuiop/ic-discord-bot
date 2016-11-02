@@ -44,7 +44,7 @@ public class HorseHeadCommand extends DiscordCommand
     private String getVDMJoke() {
         String url = "http://www.viedemerde.fr/aleatoire";
         try {
-            Document doc = Jsoup.connect(url).get();
+            Document doc = Jsoup.connect(url).userAgent("curl").get();
             Element joke = doc.body().getElementsByClass("post").first().child(1).child(0);
             return joke.text();
         } catch (IOException e) {
