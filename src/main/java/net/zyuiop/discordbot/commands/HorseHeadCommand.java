@@ -31,10 +31,12 @@ public class HorseHeadCommand extends DiscordCommand
         String url = "http://danstonchat.com/" + id + ".html";
         try {
             Document doc = Jsoup.connect(url).get();
-            Element joke = doc.body().getElementsByClass("item").first().child(0).child(0);
+            Element item = doc.body().getElementsByClass("item").first();
+            Element joke = item.child(0).child(0);
+            Element meta = item.child(1).child(0);
             String data = joke.html().replace("<br>", "\n");
             data = data.replaceAll("<span class=\"decoration\">(.+)</span>", "**$1**");
-            return data;
+            return data + "\nVotes : " + meta.child(2).text() + ", " + meta.child(3).text();
         } catch (IOException e) {
             e.printStackTrace();
         }
