@@ -49,8 +49,8 @@ public class HorseHeadCommand extends DiscordCommand
             Document doc = Jsoup.connect(url).userAgent("curl").get();
             Element joke = doc.body().getElementsByClass("article").first();
 
-            String text = joke.child(1).child(0).text();
-            Element dateBlock = joke.child(3);
+            String text = joke.child(0).child(0).text();
+            Element dateBlock = joke.child(2);
             Element votes = dateBlock.child(0);
             String valid = votes.child(1).child(1).text();
             String tlbm = votes.child(2).child(1).text();
