@@ -78,6 +78,11 @@ public class AnimeCommand extends DiscordCommand {
 		return StringUtils.join(elts, " ");
 	}
 
+	private String getRating(Document document) {
+		Element element = extractTypes(document, "rating").get(0);
+		return element.textNodes().get(1).text();
+	}
+
 	private List<Element> extractTypes(Document document, String property) {
 		// table / tbody / tr / td / div
 		Element elt = document.body().getElementById("content").child(0).child(0).child(0).child(0).child(0);
@@ -85,8 +90,10 @@ public class AnimeCommand extends DiscordCommand {
 
 		return elts.stream().filter(e -> {
 			if (e.children().size() > 0) {
+				System.out.print("cc");
 				Elements darkText = e.getElementsByClass("dark_text");
 				if (darkText.size() > 0) {
+					System.out.print("hoho " + darkText.get(0).text());
 					return darkText.get(0).text().toLowerCase().equals(property + ":");
 				}
 			}
