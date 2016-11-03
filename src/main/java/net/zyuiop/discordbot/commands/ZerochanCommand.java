@@ -18,7 +18,7 @@ public class ZerochanCommand extends DiscordCommand {
 
 	private String getImageUrl(int attempt) {
 		Random random = new Random();
-		int id = random.nextInt();
+		int id = random.nextInt(2049606);
 
 		try {
 			return Jsoup.connect(URL + id).get().body().getElementsByTag("img").first().attr("src");
