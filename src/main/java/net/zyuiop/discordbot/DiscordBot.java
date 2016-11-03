@@ -93,6 +93,7 @@ public class DiscordBot {
 		new JokeCommand();
 		new TopAnimeCommand();
 		new DanbooruCommand();
+		new ArchilectCommand();
 
 		String groups = properties.getProperty("groups");
 		if (groups != null) {
