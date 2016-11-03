@@ -94,6 +94,7 @@ public class DiscordBot {
 		new TopAnimeCommand();
 		new DanbooruCommand();
 		new KonachanCommand();
+		new ZerochanCommand();
 		new ArchilectCommand();
 
 		String groups = properties.getProperty("groups");
