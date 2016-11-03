@@ -2,4 +2,4 @@
 DiscordBot.iml
 dependency-reduced-pom.xml
 target/
-
+*.iml
