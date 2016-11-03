@@ -16,19 +16,22 @@ public class ZerochanCommand extends DiscordCommand {
 		super("zerochan", "affiche une image aléatoire Zerochan (SFW)");
 	}
 
-	private String getImageUrl() {
+	private String getImageUrl(int attempt) {
 		Random random = new Random();
 		int id = random.nextInt();
 
 		try {
 			return Jsoup.connect(URL + id).get().body().getElementsByTag("img").first().attr("src");
 		} catch (Exception e) {
-			return getImageUrl();
+			e.printStackTrace();
+			if (attempt >= 20)
+				return "Erreur.";
+			return getImageUrl(attempt + 1);
 		}
 	}
 
 	@Override
 	public void run(IMessage message) throws Exception {
-		DiscordBot.sendMessage(message.getChannel(), getImageUrl());
+		DiscordBot.sendMessage(message.getChannel(), getImageUrl(0));
 	}
 }
