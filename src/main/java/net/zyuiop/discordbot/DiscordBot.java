@@ -82,6 +82,7 @@ public class DiscordBot {
 		new GitCommand();
 		new CountCommand();
 		new CleanCommand();
+		new SafeBooruCommand();
 		new LuaCommand();
 		new AnimeCommand("anime");
 		new AnimeCommand("manga");
