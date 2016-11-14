@@ -41,6 +41,11 @@ public class TopAnimeCommand extends DiscordCommand {
 			Document doc = Jsoup.connect(url).get();
 			String data = doc.getElementsByTag("table").get(0).attr("data-items");
 
+			if (data == null || data.isEmpty()) {
+				DiscordBot.sendMessage(message.getChannel(), "Impossible de trouver cet utilisateur.");
+				return;
+			}
+
 			TypeToken<List<TopAnime>> typeToken = new TypeToken<List<TopAnime>>() {};
 			List<TopAnime> topAnimes = new Gson().fromJson(data, typeToken.getType());
 
