@@ -21,7 +21,7 @@ import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
 
 /**
- * @author zyuiop
+ * @author Julien Sahli - TheBigBlop
  */
 public class CwgCommand extends DiscordCommand {
 	private final static Set<String> wholeChannels = new HashSet<>();
