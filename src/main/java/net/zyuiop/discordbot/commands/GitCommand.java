@@ -6,7 +6,7 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import net.zyuiop.discordbot.DiscordBot;
-import net.zyuiop.discordbot.json.github.GithubCommit;
+import net.zyuiop.discordbot.data.github.GithubCommit;
 import sx.blah.discord.handle.obj.IMessage;
 
 /**

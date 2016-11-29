@@ -1,4 +1,4 @@
-package net.zyuiop.discordbot.json.menus;
+package net.zyuiop.discordbot.data.menus;
 
 /**
  * @author zyuiop

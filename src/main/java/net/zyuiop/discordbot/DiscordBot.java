@@ -92,7 +92,9 @@ public class DiscordBot {
 		new CityCommand();
 		new InsultCommand();
 		new JokeCommand();
-		new TopAnimeCommand();
+		new TopAnimeCommand("animelist", "affiche la liste d'un utilisateur MaL par ordre de note", "Top", 4);
+		new TopAnimeCommand("lastseen", "affiche les derniers animes vus d'un utilisateur MaL", "Last", 2);
+		new TopAnimeCommand("watching", "affiche les derniers animes vus d'un utilisateur MaL", "Watching", 3, 1);
 		new DanbooruCommand();
 		new KonachanCommand();
 		new ZerochanCommand();
