@@ -1,4 +1,4 @@
-package net.zyuiop.discordbot.data.mal;
+package net.zyuiop.discordbot.json.mal;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,4 +1,4 @@
-package net.zyuiop.discordbot.data.github;
+package net.zyuiop.discordbot.json.github;
 
 /**
  * @author zyuiop

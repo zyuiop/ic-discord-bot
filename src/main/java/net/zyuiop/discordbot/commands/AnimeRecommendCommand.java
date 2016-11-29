@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.logging.Logger;
 import com.google.gson.Gson;
 import net.zyuiop.discordbot.DiscordBot;
-import net.zyuiop.discordbot.data.mal.AnimeListSearch;
+import net.zyuiop.discordbot.json.mal.AnimeListSearch;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -31,7 +31,7 @@ public class AnimeRecommendCommand extends DiscordCommand {
 			return;
 		}
 		String title = StringUtils.join(Arrays.copyOfRange(parts, 1, parts.length), " ");
-		String url = "https://myanimelist.net/search/prefix.data?type=anime&keyword=" + URLEncoder.encode(title, "UTF-8") + "&v=1";
+		String url = "https://myanimelist.net/search/prefix.json?type=anime&keyword=" + URLEncoder.encode(title, "UTF-8") + "&v=1";
 
 		Logger.getAnonymousLogger().info(url);
 		URL urlObject = new URL(url);

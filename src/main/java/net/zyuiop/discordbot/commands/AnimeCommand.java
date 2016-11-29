@@ -9,8 +9,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import com.google.gson.Gson;
 import net.zyuiop.discordbot.DiscordBot;
-import net.zyuiop.discordbot.data.mal.AnimeListSearch;
-import net.zyuiop.discordbot.data.mal.AnimePage;
+import net.zyuiop.discordbot.json.mal.AnimeListSearch;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -37,7 +36,7 @@ public class AnimeCommand extends DiscordCommand {
 			return;
 		}
 		String title = StringUtils.join(Arrays.copyOfRange(parts, 1, parts.length), " ");
-		String url = "https://myanimelist.net/search/prefix.data?type=" + type + "&keyword=" + URLEncoder.encode(title, "UTF-8") + "&v=1";
+		String url = "https://myanimelist.net/search/prefix.json?type=" + type + "&keyword=" + URLEncoder.encode(title, "UTF-8") + "&v=1";
 
 		Logger.getAnonymousLogger().info(url);
 		URL urlObject = new URL(url);
@@ -62,17 +61,44 @@ public class AnimeCommand extends DiscordCommand {
 						"**Page** : " + anime.getUrl() + "\n" +
 						"**Popularity** : " + popularity  + "\n" +
 						"**Ranking** : " + rank + "\n" +
-						"**Genres** : " + AnimePage.getGenres(doc) + "\n" +
-						"**Rating** : " + AnimePage.getRating(doc)
+						"**Genres** : " + getGenres(doc) + "\n" +
+						"**Rating** : " + getRating(doc)
 				);
 
 				DiscordBot.sendMessageAutoSplit(message.getChannel(), "**Synopsis** : " + synopsis);
 
-				System.out.println("Rating " + AnimePage.getRating(doc));
+				System.out.println("Rating " + getRating(doc));
 				return;
 			}
 		}
 
 		DiscordBot.sendMessage(message.getChannel(), "Empossible de trouver ce " + type);
+	}
+
+	private String getGenres(Document document) {
+		Element element = extractTypes(document, "genres").get(0);
+		List<String> elts = element.children().stream().filter(e -> e.tagName().equalsIgnoreCase("a")).map(Element::text).collect(Collectors.toList());
+		return StringUtils.join(elts, ", ");
+	}
+
+	private String getRating(Document document) {
+		Element element = extractTypes(document, "rating").get(0);
+		return element.text();
+	}
+
+	private List<Element> extractTypes(Document document, String property) {
+		// table / tbody / tr / td / div
+		Element elt = document.body().getElementById("content").child(0).child(0).child(0).child(0).child(0);
+		Elements elts = elt.getElementsByTag("div");
+
+		return elts.stream().filter(e -> {
+			if (e.children().size() > 0) {
+				Elements darkText = e.getElementsByClass("dark_text");
+				if (darkText.size() > 0) {
+					return darkText.get(0).text().toLowerCase().equals(property + ":");
+				}
+			}
+			return false;
+		}).collect(Collectors.toList());
 	}
 }

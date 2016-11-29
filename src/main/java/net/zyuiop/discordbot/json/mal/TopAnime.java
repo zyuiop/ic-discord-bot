@@ -1,4 +1,4 @@
-package net.zyuiop.discordbot.data.mal;
+package net.zyuiop.discordbot.json.mal;
 
 /**
  * @author zyuiop

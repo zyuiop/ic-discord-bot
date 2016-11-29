@@ -3,42 +3,32 @@ package net.zyuiop.discordbot.commands;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.stream.Collectors;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import net.zyuiop.discordbot.DiscordBot;
-import net.zyuiop.discordbot.data.mal.TopAnime;
+import net.zyuiop.discordbot.json.mal.TopAnime;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import sx.blah.discord.handle.obj.IMessage;
 
 /**
  * @author zyuiop
  */
 public class TopAnimeCommand extends DiscordCommand {
-	private final String heading;
-	private final int sortOrder;
-	private final int status;
-
-	public TopAnimeCommand(String command, String description, String heading, int sortOrder, String... aliases) {
-		this(command, description, heading, sortOrder, 2, aliases);
-	}
-
-	public TopAnimeCommand(String command, String description, String heading, int sortOrder, int status, String... aliases) {
-		super(command, description);
-
-		for (String alias : aliases)
-			addAlias(alias);
-
-		this.heading = heading;
-		this.sortOrder = sortOrder;
-		this.status = status;
+	public TopAnimeCommand() {
+		super("topanime", "affiche la liste d'une personne sur MaL");
+		addAlias("animelist");
 	}
 
 	@Override
 	public void run(IMessage message) throws Exception {
 		String[] parts = message.getContent().split(" ");
 		if (parts.length < 2) {
-			DiscordBot.sendMessage(message.getChannel(), "Utilisation : !" + getName() + " <pseudo> [nombre=10]");
+			DiscordBot.sendMessage(message.getChannel(), "Utilisation : !topanime <pseudo> [nombre=10]");
 			return;
 		}
 
@@ -60,7 +50,7 @@ public class TopAnimeCommand extends DiscordCommand {
 			List<TopAnime> topAnimes = new Gson().fromJson(data, typeToken.getType());
 
 			int max = Math.min(number, topAnimes.size());
-			StringBuilder builder = new StringBuilder("**" + heading + " " + max + " animes of " + name + "** : \n");
+			StringBuilder builder = new StringBuilder("**Top " + max + " animes of " + name + "** : \n");
 
 			for (int i = 0; i < max; ++i) {
 				TopAnime anime = topAnimes.get(i);
@@ -80,5 +70,32 @@ public class TopAnimeCommand extends DiscordCommand {
 		} catch (IOException e) {
 			DiscordBot.sendMessage(message.getChannel(), "Impossible de trouver cet utilisateur.");
 		}
+	}
+
+	private String getGenres(Document document) {
+		Element element = extractTypes(document, "genres").get(0);
+		List<String> elts = element.children().stream().filter(e -> e.tagName().equalsIgnoreCase("a")).map(Element::text).collect(Collectors.toList());
+		return StringUtils.join(elts, ", ");
+	}
+
+	private String getRating(Document document) {
+		Element element = extractTypes(document, "rating").get(0);
+		return element.text();
+	}
+
+	private List<Element> extractTypes(Document document, String property) {
+		// table / tbody / tr / td / div
+		Element elt = document.body().getElementById("content").child(0).child(0).child(0).child(0).child(0);
+		Elements elts = elt.getElementsByTag("div");
+
+		return elts.stream().filter(e -> {
+			if (e.children().size() > 0) {
+				Elements darkText = e.getElementsByClass("dark_text");
+				if (darkText.size() > 0) {
+					return darkText.get(0).text().toLowerCase().equals(property + ":");
+				}
+			}
+			return false;
+		}).collect(Collectors.toList());
 	}
 }
