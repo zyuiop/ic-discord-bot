@@ -36,7 +36,7 @@ public class AnimeCommand extends DiscordCommand {
 			return;
 		}
 		String title = StringUtils.join(Arrays.copyOfRange(parts, 1, parts.length), " ");
-		String url = "https://myanimelist.net/search/prefix.json?type=" + type + "&keyword=" + URLEncoder.encode(title, "UTF-8") + "&v=1";
+		String url = "https://myanimelist.net/search/prefix.json?type=all&keyword=" + URLEncoder.encode(title, "UTF-8") + "&v=1";
 
 		Logger.getAnonymousLogger().info(url);
 		URL urlObject = new URL(url);
